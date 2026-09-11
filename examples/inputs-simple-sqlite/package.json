@@ -14,17 +14,18 @@
     "tscheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@pothos/core": "^4.0.2",
-    "@pothos/plugin-prisma": "^4.0.3",
-    "@prisma/client": "5.17.0",
-    "apollo-server": "^3.13.0",
-    "graphql": "^16.8.1"
+    "@pothos/core": "4.14.0",
+    "@pothos/plugin-prisma": "4.16.0",
+    "@prisma/adapter-better-sqlite3": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "apollo-server": "3.13.0",
+    "graphql": "16.14.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0",
-    "prisma": "^5.17.0",
-    "ts-node": "^10.9.2",
-    "tsup": "^8.0.2",
-    "typescript": "^5.5.3"
+    "nodemon": "3.1.14",
+    "prisma": "7.10.0",
+    "ts-node": "10.9.2",
+    "tsup": "8.5.1",
+    "typescript": "5.9.3"
   }
 }

@@ -1,9 +1,9 @@
-import { Prisma } from '.prisma/client';
+import { Prisma } from '../generated/prisma';
 import SchemaBuilder from '@pothos/core';
 import PrismaPlugin from '@pothos/plugin-prisma';
 import { Scalars } from '../../../../src';
 import { db } from '../db';
-import PrismaTypes from '../generated/objects';
+import PrismaTypes, { getDatamodel } from '../generated/objects';
 import { Context } from '@/server';
 
 export const builder = new SchemaBuilder<{
@@ -14,5 +14,6 @@ export const builder = new SchemaBuilder<{
   plugins: [PrismaPlugin],
   prisma: {
     client: db,
+    dmmf: getDatamodel(),
   },
 });

@@ -20,13 +20,12 @@ export default {
   moduleNameMapper: {
     "@/(.*)": "<rootDir>/src/$1"
   },
-  preset: 'ts-jest',
-  globals: {
-    "ts-jest": {
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', {
       diagnostics: { pathRegex: /\.(spec|test)\.js$/ },
       isolatedModules: true,
       tsconfig: 'tsconfig.json',
-    }
+    }],
   },
   testEnvironment: "node",
 };

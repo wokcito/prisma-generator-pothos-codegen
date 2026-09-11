@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@/generated/prisma';
 
 import { builder } from '../builder';
 
@@ -1074,20 +1074,20 @@ export const DateTimeNullableWithAggregatesFilter = builder.inputRef<PrismaUpdat
   fields: DateTimeNullableWithAggregatesFilterFields,
 });
 
-export const UserRelationFilterFields = (t: any) => ({
+export const UserScalarRelationFilterFields = (t: any) => ({
   is: t.field({"required":false,"type":UserWhereInput}),
   isNot: t.field({"required":false,"type":UserWhereInput}),
 });
-export const UserRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserRelationFilter>, false>('UserRelationFilter').implement({
-  fields: UserRelationFilterFields,
+export const UserScalarRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserScalarRelationFilter>, false>('UserScalarRelationFilter').implement({
+  fields: UserScalarRelationFilterFields,
 });
 
-export const PostRelationFilterFields = (t: any) => ({
+export const PostScalarRelationFilterFields = (t: any) => ({
   is: t.field({"required":false,"type":PostWhereInput}),
   isNot: t.field({"required":false,"type":PostWhereInput}),
 });
-export const PostRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostRelationFilter>, false>('PostRelationFilter').implement({
-  fields: PostRelationFilterFields,
+export const PostScalarRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostScalarRelationFilter>, false>('PostScalarRelationFilter').implement({
+  fields: PostScalarRelationFilterFields,
 });
 
 export const StringNullableFilterFields = (t: any) => ({

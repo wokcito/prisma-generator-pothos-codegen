@@ -1,17 +1,19 @@
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
 }
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 generator pothos {
-  provider     = "prisma-pothos-types"
+  provider          = "prisma-pothos-types"
   // Match client output location from above
-  clientOutput = ".prisma/client"
-  output       = "../src/generated/objects.d.ts"
+  clientOutput      = "../generated/prisma"
+  output            = "../src/generated/objects.ts"
+  // Required since Prisma 7: emits a `getDatamodel()` companion file the builder must pass as `prisma.dmmf`
+  generateDatamodel = "true"
 }
 
 generator pothosCrud {

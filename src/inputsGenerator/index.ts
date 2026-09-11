@@ -23,7 +23,8 @@ export type Scalars<DecimalType, JsonInput, JsonOutput> = {
     Output: JsonOutput
   }
   Bytes: {
-    Input: Buffer
+    /** Prisma returns `Uint8Array` for Bytes fields since Prisma 6; Buffer is also a Uint8Array so both are accepted */
+    Input: Buffer | Uint8Array
     Output: {
       type: 'Buffer'
       data: number[]

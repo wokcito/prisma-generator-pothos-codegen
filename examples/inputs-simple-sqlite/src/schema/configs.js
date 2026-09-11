@@ -16,11 +16,11 @@ module.exports = {
     inputsImporter: "import * as Inputs from '@/schema/__generated__/inputs'",
     deleteOutputDirBeforeGenerate: true,
     exportEverythingInObjectsDotTs: false,
-    prismaImporter: `import { Prisma } from '@prisma/client';`,
+    prismaImporter: `import { Prisma } from '@/generated/prisma';`,
     resolverImports: `\nimport { db } from '@/db';`,
   },
   inputs: {
-    prismaImporter: `import { Prisma } from '@prisma/client';`,
+    prismaImporter: `import { Prisma } from '@/generated/prisma';`,
     outputFilePath: './src/schema/__generated__/inputs.ts',
     simple: true,
   },

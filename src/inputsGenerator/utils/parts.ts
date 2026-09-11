@@ -20,7 +20,7 @@ export const getImports = (config: ConfigInternal, fileLocation: string) =>
   ['// @ts-nocheck', config.inputs.prismaImporter, getBuilderCalculatedImport({ config, fileLocation })].join('\n')
 
 export const getScalars = ({ inputs: { excludeScalars } }: ConfigInternal, dmmf: DMMF.Document) => {
-  const usedScalars = getUsedScalars(dmmf.schema.inputObjectTypes.prisma)
+  const usedScalars = getUsedScalars(dmmf.schema.inputObjectTypes.prisma ?? [])
   return [
     ...(usedScalars.hasDateTime && !excludeScalars?.includes('DateTime') ? [T.dateTimeScalar] : []),
     ...(usedScalars.hasDecimal && !excludeScalars?.includes('Decimal') ? [T.decimalScalar] : []),
@@ -63,7 +63,7 @@ type PrismaUpdateOperationsInputFilter<T extends object> = {
 };`
 
 const makeInputs = (config: ConfigInternal, dmmf: DMMF.Document, inputNames: Record<string, DMMF.Model>) =>
-  dmmf.schema.inputObjectTypes.prisma
+  (dmmf.schema.inputObjectTypes.prisma ?? [])
     // Filter out irrelevant input types
     .filter(
       (input) =>

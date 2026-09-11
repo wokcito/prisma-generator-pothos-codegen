@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { User } from './generated/prisma';
 import { ApolloServer } from 'apollo-server';
 import { db } from './db';
 import { schema } from './schema';

@@ -1,5 +1,11 @@
 # Changelog
 
+# Unreleased
+
+- [x] Upgrade: Support Prisma ORM 7 (tested against 7.10.0). peerDependencies for `prisma`/`@prisma/client` now require `^7.10.0`. The `@prisma/internals` test helper switched from the removed `getSchema`/`getDMMF` pair to reading `.prisma` fixtures directly and `getDMMF` from `@prisma/internals`. `dmmf.schema.inputObjectTypes.prisma` is now optional in Prisma's DMMF types, handled with a fallback. The generated `Bytes` scalar's `Input` mapping now accepts `Uint8Array` (Prisma 6+ represents `Bytes` fields as `Uint8Array` instead of `Buffer`).
+- [x] Chore: Bump all other devDependencies to their latest stable versions (ESLint 10, TypeScript-ESLint 8, Jest 30, ts-jest 29, Prettier 3.9, etc.). TypeScript itself stays on `5.9.3`: the new TypeScript 7 (native/Go compiler) is not yet supported by `ts-jest`/`typescript-eslint` and removes tsconfig options this project uses. Migrated `.eslintrc` to flat config (`eslint.config.js`, via `@eslint/eslintrc`'s compat layer) since ESLint 9+ dropped `.eslintrc` support. Moved `ts-jest` config from the deprecated `globals` key to `transform`.
+- [x] Docs: Updated the SQLite example and README setup instructions for Prisma 7: a driver adapter (`@prisma/adapter-better-sqlite3`) and `prisma.config.ts` are now required, and the generator no longer writes to `node_modules` by default. Also documented that recent `@pothos/plugin-prisma` versions require passing `dmmf: getDatamodel()` (not `Prisma.dmmf`, which is missing fields since Prisma 7) to the builder, which requires the `pothos` generator's `output` to be a `.ts` file (not `.d.ts`) with `generateDatamodel = "true"` set.
+
 # 0.7.1
 
 - [x] Chore: Update pothos packages of peerDependencies to v4

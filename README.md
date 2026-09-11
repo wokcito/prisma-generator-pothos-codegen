@@ -61,8 +61,8 @@ The package has been developed and tested up to the following peer dependencies 
 ```
 "@pothos/core": "^4.0.2",
 "@pothos/plugin-prisma": "^4.0.3"",
-"@prisma/client": "^5.15.1",
-"prisma": "^5.15.1",
+"@prisma/client": "^7.10.0",
+"prisma": "^7.10.0",
 ```
 
 Using higher versions may break something. In these cases, please open a new issue.
@@ -74,10 +74,19 @@ Using higher versions may break something. In these cases, please open a new iss
 ```prisma
 generator client {
   provider = "prisma-client-js"
+  // Optional. If you set a custom `output` here (recommended since Prisma 7, as the new
+  // "prisma-client" provider requires it), also set a matching `clientOutput` on the `pothos`
+  // generator below. See the updated example for a full working setup with a custom output.
 }
 
 generator pothos {
   provider = "prisma-pothos-types"
+  // Recent @pothos/plugin-prisma versions need the full datamodel (with unique indexes, etc.) at
+  // runtime, which Prisma 7's client no longer embeds. `generateDatamodel` emits a `getDatamodel()`
+  // function you must pass to the builder (see below) — but its implementation is only emitted
+  // when `output` is a plain `.ts` file (not `.d.ts`), so use a `.ts` extension here.
+  output            = "./pothos-types.ts"
+  generateDatamodel = "true"
 }
 
 generator pothosCrud {
@@ -97,15 +106,27 @@ model User {
 #### Add scalar types to the builder
 
 ```ts
+import SchemaBuilder from '@pothos/core';
+import PrismaPlugin from '@pothos/plugin-prisma';
 import { Scalars } from 'prisma-generator-pothos-codegen';
-import { Prisma } from '.prisma/client';
+// Import from your Prisma Client `output` path (the `.prisma/client` default location is no
+// longer generated since Prisma 7 when a custom `output` is set).
+import { Prisma } from './generated/prisma';
+import { db } from './db';
+import PrismaTypes, { getDatamodel } from './pothos-types';
 
 export const builder = new SchemaBuilder<{
-  // ... Context, plugins? ...
+  // ... Context ...
   PrismaTypes: PrismaTypes; // required for @pothos/plugin-prisma integration (which is required)
   Scalars: Scalars<Prisma.Decimal, Prisma.InputJsonValue | null, Prisma.InputJsonValue>; // required to define correct types for created scalars.
 }>({
-  // Other builder config
+  plugins: [PrismaPlugin],
+  prisma: {
+    client: db,
+    // Required by recent @pothos/plugin-prisma versions (see `generateDatamodel` above) —
+    // do NOT use `Prisma.dmmf`, it's missing fields (like unique indexes) since Prisma 7.
+    dmmf: getDatamodel(),
+  },
 });
 ```
 

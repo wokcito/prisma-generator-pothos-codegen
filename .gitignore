@@ -2,6 +2,8 @@ node_modules
 coverage
 __snapshots__
 generated/*
+# Prisma Client output (custom output path, required by Prisma 7): heavy generated engine/wasm files, not meant to be committed
+examples/*/src/generated/prisma
 dmmf.json
 log.txt
 yarn*.log
