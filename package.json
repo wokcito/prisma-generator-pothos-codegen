@@ -1,6 +1,6 @@
 {
   "name": "@wokcito/prisma-generator-pothos-codegen",
-  "version": "0.7.1",
+  "version": "1.0.0",
   "license": "MIT",
   "description": "A prisma generator that generate input types for Pothos. And optionally generate all crud.",
   "main": "./src/index.js",
