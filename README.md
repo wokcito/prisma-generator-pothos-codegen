@@ -1,6 +1,6 @@
 # Prisma Generator Pothos Codegen
 
-![Group 1](https://github.com/Cauen/prisma-generator-pothos-codegen/assets/8796757/19f6cdbe-44f5-40ac-8b9b-326c49c1c281)
+![Group 1](https://github.com/wokcito/prisma-generator-pothos-codegen/assets/8796757/19f6cdbe-44f5-40ac-8b9b-326c49c1c281)
 
 A [prisma](https://www.prisma.io/) [generator](https://www.prisma.io/docs/concepts/components/prisma-schema/generators) plugin that auto-generates [Pothos](https://pothos-graphql.dev/) GraphQL input types and crud operations (all queries and mutations).
 
@@ -43,13 +43,13 @@ On `prisma generate` we create:
 Using yarn
 
 ```sh
-yarn add -D prisma-generator-pothos-codegen
+yarn add -D @wokcito/prisma-generator-pothos-codegen
 ```
 
 or using npm
 
 ```sh
-npm install --save-dev prisma-generator-pothos-codegen
+npm install --save-dev @wokcito/prisma-generator-pothos-codegen
 ```
 
 ### Peer dependencies
@@ -108,7 +108,7 @@ model User {
 ```ts
 import SchemaBuilder from '@pothos/core';
 import PrismaPlugin from '@pothos/plugin-prisma';
-import { Scalars } from 'prisma-generator-pothos-codegen';
+import { Scalars } from '@wokcito/prisma-generator-pothos-codegen';
 // Import from your Prisma Client `output` path (the `.prisma/client` default location is no
 // longer generated since Prisma 7 when a custom `output` is set).
 import { Prisma } from './generated/prisma';
@@ -135,7 +135,7 @@ export const builder = new SchemaBuilder<{
 ```js
 // ./pothos.config.js
 
-/** @type {import('prisma-generator-pothos-codegen').Config} */
+/** @type {import('@wokcito/prisma-generator-pothos-codegen').Config} */
 module.exports = {
   inputs: {
     outputFilePath: './src/graphql/__generated__/inputs.ts',
@@ -205,7 +205,7 @@ module.exports = {
       exportEverythingInObjectsDotTs?: boolean;
       /** Map all Prisma fields with "@id" attribute to Graphql "ID" Scalar. Default: 'Objects' */
       mapIdFieldsToGraphqlId?: false | 'Objects';
-      /** Change the generated variables from object.base.ts from something like `UserName` to `User_Name`. This avoids generated duplicated names in some cases. See [issue #58](https://github.com/Cauen/prisma-generator-pothos-codegen/issues/58). Default: false */
+      /** Change the generated variables from object.base.ts from something like `UserName` to `User_Name`. This avoids generated duplicated names in some cases. See [issue #58](https://github.com/wokcito/prisma-generator-pothos-codegen/issues/58). Default: false */
       underscoreBetweenObjectVariableNames?: false | 'Objects';
     };
     /** Global config */
