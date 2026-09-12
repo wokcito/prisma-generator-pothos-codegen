@@ -28,13 +28,13 @@
     "test": "jest",
     "build": "tsc",
     "tscheck": "tsc -noEmit",
-    "prebuild": "yarn clean",
+    "prebuild": "bun run clean",
     "postbuild": "shx cp ./README.md ./dist && shx chmod +x ./dist/src/bin.js",
     "clean": "shx rm -rf dist",
     "pub": "cd dist && npm publish",
     "format": "eslint --fix ./src",
-    "check-src-and-examples": "yarn test && yarn tscheck && cd examples/inputs-simple-sqlite && yarn generate && yarn tscheck",
-    "fullcheck": "yarn check-src-and-examples"
+    "check-src-and-examples": "bun run test && bun run tscheck && cd examples/inputs-simple-sqlite && bun run generate && bun run tscheck",
+    "fullcheck": "bun run check-src-and-examples"
   },
   "bin": {
     "prisma-generator-pothos-codegen": "./src/bin.js"
@@ -72,5 +72,5 @@
   "dependencies": {
     "@prisma/generator-helper": "7.10.0"
   },
-  "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
+  "packageManager": "bun@1.4.2"
 }

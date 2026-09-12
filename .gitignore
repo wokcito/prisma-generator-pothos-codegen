@@ -7,6 +7,7 @@ examples/*/src/generated/prisma
 dmmf.json
 log.txt
 yarn*.log
+*.db*
 dist
 tsconfig.tsbuildinfo
 TEST-*

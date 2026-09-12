@@ -14,35 +14,25 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        prisma-version: [4.7.0, 4.8.0]
-        node-version: [16, 18]
 
-    name: Node ${{ matrix.node-version }} with Prisma ${{ matrix.prisma-version }}
+    name: Build and test
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
 
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: ⎔ Setup Node.js environment
-        uses: actions/setup-node@v3
+      - name: 🥟 Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: "yarn"
-
-      - name: 🏗 Swap Prisma version to ~${{ matrix.prisma-version }}
-        run: |
-          sed -i -E 's|"prisma": ".*"|"prisma": "~${{ matrix.prisma-version }}"|g' package.json
-          sed -i -E 's|"\@prisma/client": ".*"|"\@prisma/client": "~${{ matrix.prisma-version }}"|g' package.json
-          sed -i -E 's|"\@prisma/generator-helper": ".*"|"\@prisma/generator-helper": "~${{ matrix.prisma-version }}"|g' package.json
-          sed -i -E 's|"\@prisma/internals": ".*"|"\@prisma/internals": "~${{ matrix.prisma-version }}"|g' package.json
+          bun-version: 1.4.2
 
       - name: 📥 Install dependencies
-        run: yarn install
+        run: bun install
 
       - name: 🧪 Run tests
-        run: yarn test
+        run: bun run test
 
+      - name: 🔎 Type check
+        run: bun run tscheck
