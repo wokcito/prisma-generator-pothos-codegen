@@ -1,12 +1,12 @@
 import path from 'node:path'
-import { ConfigInternal } from '../utils/config'
+import type { DMMF } from '@prisma/generator-helper'
+import type { ConfigInternal } from '../utils/config'
 import { getConfigCrudUnderscore } from '../utils/configUtils'
 import { deleteFolder, writeFile } from '../utils/filesystem'
 import { useTemplate } from '../utils/template'
-import { utilsTemplate, objectsTemplate, autoCrudTemplate } from './templates/root'
+import { autoCrudTemplate, objectsTemplate, utilsTemplate } from './templates/root'
 import { generateModel } from './utils/generator'
 import { getBuilderCalculatedImport } from './utils/parts'
-import type { DMMF } from '@prisma/generator-helper'
 
 export async function generateCrud(config: ConfigInternal, dmmf: DMMF.Document): Promise<void> {
   if (config.crud.disabled) return
@@ -26,7 +26,7 @@ export async function generateCrud(config: ConfigInternal, dmmf: DMMF.Document):
     .map((el) => {
       return {
         model: el.model,
-        exports: el.generated.index.map((el) => el.exports).flat(),
+        exports: el.generated.index.flatMap((el) => el.exports),
       }
     })
     .filter((el) => Boolean(el.exports.length))

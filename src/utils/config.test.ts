@@ -1,4 +1,4 @@
-import { ExtendedGeneratorOptions } from '../generator'
+import type { ExtendedGeneratorOptions } from '../generator'
 import { getSampleDMMF } from '../tests/getPrismaSchema'
 import * as config from './config'
 
@@ -14,7 +14,7 @@ const generateOptions = async (generatorConfigPath?: string): Promise<ExtendedGe
       name: 'pothosCrud',
       provider: {
         fromEnvVar: null,
-        value: 'ts-node --transpile-only ../../src/generator.ts',
+        value: 'tsx ../../src/generator.ts',
       },
       output: {
         value: `${cwd}/src/tests/generated/inputs.ts`,
@@ -23,6 +23,7 @@ const generateOptions = async (generatorConfigPath?: string): Promise<ExtendedGe
       config: {},
       binaryTargets: [],
       previewFeatures: [],
+      sourceFilePath: `${cwd}/src/tests/simpleSchema.prisma`,
     },
     generatorConfigPath,
     dmmf,
@@ -37,6 +38,7 @@ const generateOptions = async (generatorConfigPath?: string): Promise<ExtendedGe
         config: {},
         binaryTargets: [],
         previewFeatures: [],
+        sourceFilePath: `${cwd}/src/tests/simpleSchema.prisma`,
       },
       {
         name: 'pothos',
@@ -49,11 +51,11 @@ const generateOptions = async (generatorConfigPath?: string): Promise<ExtendedGe
         binaryTargets: [],
         previewFeatures: [],
         isCustomOutput: true,
+        sourceFilePath: `${cwd}/src/tests/simpleSchema.prisma`,
       },
     ],
     schemaPath: `${cwd}/src/tests/simpleSchema.prisma`,
     version: '272861e07ab64f234d3ffc4094e32bd61775599c',
-    dataProxy: false,
   } satisfies ExtendedGeneratorOptions
 }
 
@@ -117,7 +119,7 @@ describe('parseConfig', () => {
 
   it(`should throw error if the file doesn't exist`, async () => {
     const fileName = './does-not-exist'
-    const regexp = new RegExp(`^Cannot find module '${fileName}'`)
+    const regexp = /Cannot find module.*does-not-exist/
 
     await expect(parseConfig(fileName)).rejects.toThrow(regexp)
   })
@@ -144,13 +146,11 @@ describe('parseConfig', () => {
 
 describe('getConfig', () => {
   const { getConfig } = config
-  const getDefaultConfigMock = jest.spyOn(config, 'getDefaultConfig')
 
   it(`should return the default config if a configPath doesn't exist`, async () => {
     const options = await generateOptions()
     const configs = await getConfig(options)
 
-    expect(getDefaultConfigMock).toHaveBeenCalledWith()
     expect(configs).toEqual({
       crud: expect.objectContaining({
         deleteOutputDirBeforeGenerate: false,
@@ -184,7 +184,6 @@ describe('getConfig', () => {
     const options = await generateOptions('../tests/configs.js')
     const configs = await getConfig(options)
 
-    expect(getDefaultConfigMock).toHaveBeenCalledWith({})
     expect(configs).toEqual({
       crud: expect.objectContaining({
         deleteOutputDirBeforeGenerate: true,

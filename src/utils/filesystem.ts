@@ -1,9 +1,9 @@
-import { PathLike } from 'node:fs'
+import type { PathLike } from 'node:fs'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { env } from '../env'
-import { ConfigInternal } from './config'
-import { Replacer, ReplacerSection } from './replacer'
+import type { ConfigInternal } from './config'
+import type { Replacer, ReplacerSection } from './replacer'
 
 export const debugLog = async (value: string, timestamp = true) => {
   if (!env.isTesting) return

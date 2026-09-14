@@ -1,9 +1,9 @@
-import { ConfigInternal } from '../../utils/config'
+import type { DMMF } from '@prisma/generator-helper'
+import type { ConfigInternal } from '../../utils/config'
 import { getConfigCrudUnderscore } from '../../utils/configUtils'
 import { escapeQuotesAndMultilineSupport, firstLetterUpperCase } from '../../utils/string'
 import { useTemplate } from '../../utils/template'
-import { relationObjectTemplate, listRelationObjectTemplate, fieldObjectTemplate } from '../templates/object'
-import type { DMMF } from '@prisma/generator-helper'
+import { fieldObjectTemplate, listRelationObjectTemplate, relationObjectTemplate } from '../templates/object'
 
 export const cleanifyDocumentation = (str?: string) => str?.replace(/\s*@Pothos\.omit\(.*\)\s*/, '')
 

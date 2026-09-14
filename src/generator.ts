@@ -1,4 +1,4 @@
-import { generatorHandler, GeneratorOptions } from '@prisma/generator-helper'
+import { type GeneratorOptions, generatorHandler } from '@prisma/generator-helper'
 import { generateCrud } from './crudGenerator'
 import { generateInputs } from './inputsGenerator'
 import { getConfig } from './utils/config'

@@ -25,15 +25,16 @@
     "codegen"
   ],
   "scripts": {
-    "test": "jest",
-    "build": "tsc",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.build.json",
     "tscheck": "tsc -noEmit",
     "prebuild": "bun run clean",
     "postbuild": "shx cp ./README.md ./dist && shx chmod +x ./dist/src/bin.js",
     "clean": "shx rm -rf dist",
     "pub": "cd dist && npm publish",
-    "format": "eslint --fix ./src",
-    "check-src-and-examples": "bun run test && bun run tscheck && cd examples/inputs-simple-sqlite && bun run generate && bun run tscheck",
+    "format": "biome check --write ./src",
+    "lint": "biome check ./src",
+    "check-src-and-examples": "bun run lint && bun run test && bun run tscheck && cd examples/inputs-simple-sqlite && bun run generate && bun run tscheck",
     "fullcheck": "bun run check-src-and-examples"
   },
   "bin": {
@@ -49,25 +50,13 @@
     "node": ">=20.19.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "3.3.7",
+    "@biomejs/biome": "^2.5.13",
     "@prisma/internals": "7.10.0",
-    "@types/jest": "30.0.0",
     "@types/node": "22.20.2",
-    "@typescript-eslint/eslint-plugin": "8.70.0",
-    "@typescript-eslint/parser": "8.70.0",
-    "eslint": "10.10.0",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-config-standard": "17.1.0",
-    "eslint-plugin-import": "2.32.0",
-    "eslint-plugin-n": "18.3.0",
-    "eslint-plugin-prettier": "5.5.6",
-    "eslint-plugin-promise": "7.3.0",
-    "jest": "30.5.1",
-    "prettier": "3.9.6",
     "shx": "0.4.0",
-    "ts-jest": "29.4.12",
-    "ts-node": "10.9.2",
-    "typescript": "5.9.3"
+    "tsx": "^4.23.13",
+    "typescript": "7.0.2",
+    "vitest": "^5.0.0"
   },
   "dependencies": {
     "@prisma/generator-helper": "7.10.0"

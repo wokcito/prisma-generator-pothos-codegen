@@ -1,5 +1,6 @@
 import path from 'node:path'
-import { ConfigInternal } from '../../utils/config'
+import type { DMMF } from '@prisma/generator-helper'
+import type { ConfigInternal } from '../../utils/config'
 import { getConfigCrudUnderscore } from '../../utils/configUtils'
 import { writeFile } from '../../utils/filesystem'
 import {
@@ -11,7 +12,6 @@ import {
 import { useTemplate } from '../../utils/template'
 import { objectTemplate } from '../templates/object'
 import { getObjectFieldsString } from './objectFields'
-import type { DMMF } from '@prisma/generator-helper'
 
 type ResolverType = 'queries' | 'mutations'
 

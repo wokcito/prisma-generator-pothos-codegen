@@ -1,7 +1,7 @@
 import path from 'node:path'
-import { ExtendedGeneratorOptions } from '../generator'
-import { Replacer } from './replacer'
 import type { DMMF } from '@prisma/generator-helper'
+import type { ExtendedGeneratorOptions } from '../generator'
+import type { Replacer } from './replacer'
 
 /** Interface used to configure generator behavior */
 export interface Config {
