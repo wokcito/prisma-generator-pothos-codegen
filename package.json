@@ -50,13 +50,13 @@
     "node": ">=20.19.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.13",
+    "@biomejs/biome": "2.5.13",
     "@prisma/internals": "7.10.0",
     "@types/node": "22.20.2",
     "shx": "0.4.0",
-    "tsx": "^4.23.13",
+    "tsx": "4.23.13",
     "typescript": "7.0.2",
-    "vitest": "^5.0.0"
+    "vitest": "5.0.0"
   },
   "dependencies": {
     "@prisma/generator-helper": "7.10.0"
