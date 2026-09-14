@@ -1,6 +1,6 @@
 {
   "name": "@wokcito/prisma-generator-pothos-codegen",
-  "version": "2.0.0-next.0",
+  "version": "1.0.0",
   "author": "Maximiliano Kazanski",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
     "@biomejs/biome": "2.5.13",
     "@prisma/orm-postgres": "8.0.0-rc.11",
     "@types/node": "22.20.2",
-    "prisma": "8.0.0-rc.15",
+    "prisma": "https://registry.npmjs.org/prisma/-/prisma-8.0.0-rc.15.tgz",
     "shx": "0.4.0",
     "tsx": "4.23.13",
     "typescript": "7.0.2",
