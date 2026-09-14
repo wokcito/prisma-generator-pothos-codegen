@@ -8,7 +8,7 @@ export type ReplacerSection =
   | 'crud.autocrud'
   | 'inputs'
   | 'debug.log'
-  | 'debug.dmmf'
+  | 'debug.contract'
 
 export type Replacer<T extends string = ''> = (
   generated: string,

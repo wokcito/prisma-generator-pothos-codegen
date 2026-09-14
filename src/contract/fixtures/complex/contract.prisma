@@ -1,0 +1,116 @@
+// Fixture: port of src/tests/complexSchema.prisma to Prisma 8 contract (PSL).
+// Regenerate with: `bunx prisma contract emit` from this directory.
+// NOTE vs v7: Profile.userId needs @unique (v8 requires unique FK for singular back-relation),
+// Role enum needs @@type, @db.* attributes are removed in v8.
+// use prisma-next
+model User {
+  id            Int         @id(map: "User_pkey") @default(autoincrement())
+  firstName     String
+  /// lastname description
+  lastName      String
+  /// relation desc
+  posts         Post[]
+  Comments      Comment[]
+  /// createdAt description
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime?
+  Profile       Profile?
+  scalar        WithScalars @relation(fields: [withScalarsId], references: [id], map: "User_scalar_fkey")
+  followers     Follow[]    @relation("followers")
+  following     Follow[]    @relation("following")
+  withScalarsId Int
+  role          Role        @default(USER)
+
+  @@map("User")
+}
+
+model Post {
+  id       Int       @id(map: "Post_pkey") @default(autoincrement())
+  title    String
+  /// createdAt description
+  content  String
+  author   User      @relation(fields: [authorId], references: [id], map: "Post_authorId_fkey")
+  Comments Comment[]
+  authorId Int
+
+  @@map("Post")
+}
+
+model Comment {
+  id       Int    @id(map: "Comment_pkey") @default(autoincrement())
+  comment  String
+  author   User   @relation(fields: [authorId], references: [id], map: "Comment_authorId_fkey")
+  post     Post   @relation(fields: [postId], references: [id], map: "Comment_postId_fkey")
+  authorId Int
+  postId   Int
+
+  @@map("Comment")
+}
+
+model Profile {
+  id     Int     @id(map: "Profile_pkey") @default(autoincrement())
+  bio    String?
+  user   User    @relation(fields: [userId], references: [id], map: "Profile_userId_fkey")
+  userId Int     @unique
+
+  @@map("Profile")
+}
+
+model Follow {
+  fromId Int
+  toId   Int
+  from   User @relation("following", fields: [fromId], references: [id], map: "Follow_fromId_fkey")
+  to     User @relation("followers", fields: [toId], references: [id], map: "Follow_toId_fkey")
+
+  @@id(map: "Follow_pkey", [fromId, toId])
+
+  @@map("Follow")
+}
+
+model Unrelated {
+  id   Int     @id(map: "Unrelated_pkey") @default(autoincrement())
+  name String?
+
+  @@map("Unrelated")
+}
+
+model IdOnly {
+  id Int @id(map: "IdOnly_pkey") @default(autoincrement())
+
+  @@map("IdOnly")
+}
+
+model WithoutID {
+  name String @unique
+
+  @@map("WithoutID")
+}
+
+model Bird {
+  id   String @id(map: "Bird_pkey")
+  name String
+
+  @@map("Bird")
+}
+
+enum Role {
+  @@type("pg/text@1")
+  USER  = "USER"
+  ADMIN = "ADMIN"
+}
+
+model WithScalars {
+  id       Int      @id(map: "WithScalars_pkey") @default(autoincrement())
+  string   String?
+  boolean  Boolean?
+  int      Int?
+  float    Float?
+  decimal  Decimal?
+  bigint   BigInt?
+  datetime DateTime?
+  json     Json?
+  bytes    Bytes?
+  User     User[]
+
+  @@map("WithScalars")
+}

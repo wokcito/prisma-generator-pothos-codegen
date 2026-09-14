@@ -17,7 +17,7 @@ generator pothos {
 }
 
 generator pothosCrud {
-  provider            = "ts-node --transpile-only ../../src/generator.ts"
+  provider            = "tsx ../../src/generator.ts"
   generatorConfigPath = "../src/schema/configs.js"
 }
 

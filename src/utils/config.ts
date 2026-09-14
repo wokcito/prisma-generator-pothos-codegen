@@ -1,23 +1,18 @@
-import path from 'node:path'
-import { ExtendedGeneratorOptions } from '../generator'
-import { Replacer } from './replacer'
-import type { DMMF } from '@prisma/generator-helper'
+import type { Replacer } from './replacer'
 
-/** Interface used to configure generator behavior */
+/** Interface used to configure generator behavior (Prisma 8 contract-based). */
 export interface Config {
   /** Input type generation config */
   inputs?: {
-    /** Create simpler inputs for easier customization and ~65% less generated code. Default: `false` */
-    simple?: boolean
-    /** How to import the Prisma namespace. Default: `"import { Prisma } from '.prisma/client';"` */
-    prismaImporter?: string
+    /** How to import the contract types (e.g. `import type { Contract } from '../prisma/contract';`). Default: `"import type { Contract } from './prisma/contract';"` */
+    contractTypesImporter?: string
     /** Path to generate the inputs file to from project root. Default: `'./generated/inputs.ts'` */
     outputFilePath?: string
     /** List of excluded scalars from generated output */
     excludeScalars?: string[]
     /** A function to replace generated source. Combined with global replacer config */
     replacer?: Replacer<'inputs'>
-    /** Map all Prisma fields with "@id" attribute to Graphql "ID" Scalar.
+    /** Map all id fields (primary key + uniques used in WhereUnique inputs) to GraphQL "ID" scalar.
      *
      * ATTENTION: Mapping non String requires a conversion inside resolver, once GraphQl ID Input are coerced to String by definition. Default: false */
     mapIdFieldsToGraphqlId?: false | 'WhereUniqueInputs'
@@ -28,11 +23,11 @@ export interface Config {
     disabled?: boolean
     /** How to import the inputs. Default `"import * as Inputs from '../inputs';"` */
     inputsImporter?: string
-    /** How to import the Prisma namespace at the objects.ts file. Default `"import { Prisma } from '.prisma/client';"`. Please use "resolverImports" to import prismaClient at resolvers. */
-    prismaImporter?: string
-    /** How to call the prisma client. Default `'_context.prisma'` */
-    prismaCaller?: string
-    /** Any additional imports you might want to add to the resolvers (e.g. your prisma client). Default: `''` */
+    /** How to import the contract types at the objects.ts file. Default `"import type { Contract } from '../prisma/contract';"`. */
+    contractTypesImporter?: string
+    /** How to reach the Prisma 8 client from the resolver context. Default `'_context.db'` (used as `_context.db.orm.<namespace>.<Model>`) */
+    dbCaller?: string
+    /** Any additional imports you might want to add to the resolvers (e.g. your db client). Default: `''` */
     resolverImports?: string
     /** Directory to generate crud code into from project root. Default: `'./generated'` */
     outputDir?: string
@@ -52,9 +47,9 @@ export interface Config {
     deleteOutputDirBeforeGenerate?: boolean
     /** Export all crud queries/mutations/objects in objects.ts at root dir. Default: true */
     exportEverythingInObjectsDotTs?: boolean
-    /** Map all Prisma fields with "@id" attribute to Graphql "ID" Scalar. Default: 'Objects' */
+    /** Map all id fields to Graphql "ID" Scalar. Default: 'Objects' */
     mapIdFieldsToGraphqlId?: false | 'Objects'
-    /** Change the generated variables from object.base.ts from something like `UserName` to `User_Name`. This avoids generated duplicated names in some cases. See [issue #58](https://github.com/Cauen/prisma-generator-pothos-codegen/issues/58). Default: False */
+    /** Change the generated variables from object.base.ts from something like `UserName` to `User_Name`. This avoids generated duplicated names in some cases. Default: False */
     underscoreBetweenObjectVariableNames?: false | 'Objects'
   }
   /** Global config */
@@ -62,9 +57,9 @@ export interface Config {
     /** A function to replace generated source */
     replacer?: Replacer
     /** Run function before generate */
-    beforeGenerate?: (dmmf: DMMF.Document) => void
+    beforeGenerate?: (schema: unknown) => void
     /** Run function after generate */
-    afterGenerate?: (dmmf: DMMF.Document) => void
+    afterGenerate?: (schema: unknown) => void
     /** Location of builder. Default: './builder', */
     builderLocation?: string
   }
@@ -77,26 +72,13 @@ export type ConfigInternal = {
   global: NonNullable<Required<Config['global']>>
 }
 
-/** Parses the configuration file path */
-export const getConfigPath = ({
-  generatorConfigPath,
-  schemaPath,
-}: {
-  generatorConfigPath?: string
-  schemaPath: string
-}): string | undefined => {
+/** Resolves the configuration file path from the CLI option or env var */
+export const getConfigPath = ({ configPath }: { configPath?: string }): string | undefined => {
   const envConfigPath = process.env.POTHOS_CRUD_CONFIG_PATH
-  const configPath = envConfigPath || generatorConfigPath // use env var if set
-
-  if (!configPath) return undefined
-
-  const schemaDirName = path.dirname(schemaPath)
-  const optionsPath = path.join(schemaDirName, configPath)
-
-  return optionsPath
+  return envConfigPath || configPath // use env var if set
 }
 
-/** Parses the configuration file based on the provided schema and config paths */
+/** Parses the configuration file at the given path */
 export const parseConfig = async (configPath: string): Promise<Config> => {
   const importedFile = await import(configPath) // throw error if dont exist
   const { crud, global, inputs }: Config = importedFile || {}
@@ -104,10 +86,9 @@ export const parseConfig = async (configPath: string): Promise<Config> => {
   return { crud, global, inputs }
 }
 
-export const getDefaultConfig: (global?: Config['global']) => ConfigInternal = () => ({
+export const getDefaultConfig: () => ConfigInternal = () => ({
   inputs: {
-    simple: false,
-    prismaImporter: `import { Prisma } from '.prisma/client';`,
+    contractTypesImporter: `import type { Contract } from './prisma/contract';`,
     outputFilePath: './generated/inputs.ts',
     excludeScalars: [],
     replacer: (str: string) => str,
@@ -116,8 +97,8 @@ export const getDefaultConfig: (global?: Config['global']) => ConfigInternal = (
   crud: {
     disabled: false,
     inputsImporter: `import * as Inputs from '../inputs';`,
-    prismaImporter: `import { Prisma } from '.prisma/client';`,
-    prismaCaller: '_context.prisma',
+    contractTypesImporter: `import type { Contract } from '../prisma/contract';`,
+    dbCaller: '_context.db',
     resolverImports: '',
     outputDir: './generated',
     replacer: (str: string) => str,
@@ -143,15 +124,14 @@ export const getDefaultConfig: (global?: Config['global']) => ConfigInternal = (
   },
 })
 
-/** Receives the config path from generator options, loads the config from file, fills out the default values, and returns it */
-export const getConfig = async (extendedGeneratorOptions: ExtendedGeneratorOptions): Promise<ConfigInternal> => {
-  const { generatorConfigPath, schemaPath } = extendedGeneratorOptions
-  const configPath = getConfigPath({ generatorConfigPath, schemaPath })
+/** Loads the config file (if any), fills out the default values, and returns it */
+export const getConfig = async (options: { configPath?: string }): Promise<ConfigInternal> => {
+  const configPath = getConfigPath(options)
 
   if (!configPath) return getDefaultConfig()
 
   const { inputs, crud, global } = await parseConfig(configPath)
-  const defaultConfig = getDefaultConfig(global)
+  const defaultConfig = getDefaultConfig()
 
   return {
     inputs: { ...defaultConfig.inputs, ...inputs },

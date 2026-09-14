@@ -1,0 +1,27 @@
+// Fixture: port of src/tests/simpleSchema.prisma to Prisma 8 contract (PSL).
+// Regenerate with: `bunx prisma contract emit` from this directory.
+// use prisma-next
+model User {
+  id        Int      @id(map: "User_pkey") @default(autoincrement())
+  firstName String
+  /// lastname description
+  lastName  String
+  /// relation desc
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+
+  @@map("User")
+}
+
+model Post {
+  id        Int      @id(map: "Post_pkey") @default(autoincrement())
+  title     String
+  content   String
+  author    User     @relation(fields: [authorId], references: [id], map: "Post_authorId_fkey")
+  authorId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+
+  @@map("Post")
+}

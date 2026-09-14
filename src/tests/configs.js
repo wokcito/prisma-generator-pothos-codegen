@@ -5,13 +5,13 @@ module.exports = {
   crud: {
     outputDir: './src/schema/__generated__/',
     excludeResolversContain: ['User'],
-    prismaCaller: '_context.db',
+    dbCaller: '_context.db',
     disabled: false,
     // inputsImporter: "import * as Inputs from '@/schema/inputs'",
     deleteOutputDirBeforeGenerate: true,
   },
   inputs: {
-    prismaImporter: `import { Prisma } from '.prisma/client';`,
+    contractTypesImporter: `import type { Contract } from '../prisma/contract';`,
     outputFilePath: './src/schema/__generated__/inputs.ts',
   },
   global: {},
