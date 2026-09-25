@@ -1,0 +1,13 @@
+{
+  // Looser settings than tsconfig.json: target ES2019 and no `noImplicitAny` (the runtime needs `flat` / `flatMap`, ES2019)
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2019",
+    "lib": ["ES2021"],
+    "noImplicitAny": false,
+    "strict": false,
+    "strictNullChecks": true,
+    "noEmit": true
+  },
+  "include": ["src/schema", "src/security.ts", "src/context.ts", "src/generated/objects.ts"]
+}

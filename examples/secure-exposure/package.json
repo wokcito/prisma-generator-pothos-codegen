@@ -1,0 +1,30 @@
+{
+  "name": "secure-exposure",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "generate": "bun run sync-runtime && prisma generate",
+    "push": "prisma db push",
+    "tscheck": "tsc --noEmit",
+    "test": "vitest run",
+    "sync-runtime": "(cd ../.. && bun run build) && rm -rf node_modules/@wokcito && mkdir -p node_modules/@wokcito && ln -s ../../../../dist node_modules/@wokcito/prisma-generator-pothos-codegen",
+    "tscheck:compat": "tsc -p tsconfig.compat.json",
+    "tscheck:ts54": "bunx -p typescript@5.4.5 tsc --noEmit && bunx -p typescript@5.4.5 tsc -p tsconfig.compat.json",
+    "tscheck:variants": "node scripts/check-variants.mjs"
+  },
+  "dependencies": {
+    "@pothos/core": "4.14.0",
+    "@pothos/plugin-prisma": "4.16.0",
+    "@prisma/adapter-better-sqlite3": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "graphql": "16.14.2"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.2",
+    "prisma": "7.10.0",
+    "tsx": "4.23.13",
+    "typescript": "5.9.3",
+    "vitest": "5.0.0"
+  }
+}

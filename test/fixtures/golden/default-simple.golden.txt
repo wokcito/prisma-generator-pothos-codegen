@@ -1,0 +1,2168 @@
+//// FILE: ./generated/inputs.ts
+// @ts-nocheck
+import { Prisma } from '.prisma/client';
+
+import { builder } from '../builder';
+
+type Filters = {
+  string: Prisma.StringFieldUpdateOperationsInput;
+  nullableString: Prisma.NullableStringFieldUpdateOperationsInput;
+  dateTime: Prisma.DateTimeFieldUpdateOperationsInput;
+  nullableDateTime: Prisma.NullableDateTimeFieldUpdateOperationsInput;
+  int: Prisma.IntFieldUpdateOperationsInput;
+  nullableInt: Prisma.NullableIntFieldUpdateOperationsInput;
+  bool: Prisma.BoolFieldUpdateOperationsInput;
+  nullableBool: Prisma.NullableBoolFieldUpdateOperationsInput;
+  bigInt: Prisma.BigIntFieldUpdateOperationsInput;
+  nullableBigInt: Prisma.NullableBigIntFieldUpdateOperationsInput;
+  bytes: Prisma.BytesFieldUpdateOperationsInput;
+  nullableBytes: Prisma.NullableBytesFieldUpdateOperationsInput;
+  float: Prisma.FloatFieldUpdateOperationsInput;
+  nullableFloat: Prisma.NullableFloatFieldUpdateOperationsInput;
+  decimal: Prisma.DecimalFieldUpdateOperationsInput;
+  nullableDecimal: Prisma.NullableDecimalFieldUpdateOperationsInput;
+};
+
+type ApplyFilters<InputField> = {
+  [F in keyof Filters]: 0 extends 1 & Filters[F]
+    ? never
+    : Filters[F] extends InputField
+    ? Filters[F]
+    : never;
+}[keyof Filters];
+
+type PrismaUpdateOperationsInputFilter<T extends object> = {
+  [K in keyof T]: [ApplyFilters<T[K]>] extends [never] ? T[K] : ApplyFilters<T[K]>
+};
+
+export const DateTime = builder.scalarType('DateTime', {
+  parseValue: (value) => {
+    try {
+      const date = new Date(value)
+      if (date.toString() === 'Invalid Date') throw new Error('Invalid Date')
+      return date
+    } catch (error) {
+      throw new Error('Invalid Date');
+    }
+  },
+  serialize: (value) => value ? new Date(value) : null,
+});
+
+export const TransactionIsolationLevel = builder.enumType('TransactionIsolationLevel', {
+  values: ["ReadUncommitted","ReadCommitted","RepeatableRead","Serializable"] as const,
+});
+
+export const UserScalarFieldEnum = builder.enumType('UserScalarFieldEnum', {
+  values: ["id","firstName","lastName","createdAt","updatedAt"] as const,
+});
+
+export const PostScalarFieldEnum = builder.enumType('PostScalarFieldEnum', {
+  values: ["id","title","content","authorId","createdAt","updatedAt"] as const,
+});
+
+export const SortOrder = builder.enumType('SortOrder', {
+  values: ["asc","desc"] as const,
+});
+
+export const QueryMode = builder.enumType('QueryMode', {
+  values: ["default","insensitive"] as const,
+});
+
+export const NullsOrder = builder.enumType('NullsOrder', {
+  values: ["first","last"] as const,
+});
+
+export const UserWhereInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[UserWhereInput]}),
+  OR: t.field({"required":false,"type":[UserWhereInput]}),
+  NOT: t.field({"required":false,"type":[UserWhereInput]}),
+  id: t.field({"required":false,"type":IntFilter}),
+  firstName: t.field({"required":false,"type":StringFilter}),
+  lastName: t.field({"required":false,"type":StringFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeNullableFilter}),
+  posts: t.field({"required":false,"type":PostListRelationFilter}),
+});
+export const UserWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserWhereInput>, false>('UserWhereInput').implement({
+  fields: UserWhereInputFields,
+});
+
+export const UserOrderByWithRelationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  firstName: t.field({"required":false,"type":SortOrder}),
+  lastName: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+  posts: t.field({"required":false,"type":PostOrderByRelationAggregateInput}),
+});
+export const UserOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserOrderByWithRelationInput>, false>('UserOrderByWithRelationInput').implement({
+  fields: UserOrderByWithRelationInputFields,
+});
+
+export const UserWhereUniqueInputFields = (t: any) => ({
+  id: t.int({"required":false}),
+  AND: t.field({"required":false,"type":[UserWhereInput]}),
+  OR: t.field({"required":false,"type":[UserWhereInput]}),
+  NOT: t.field({"required":false,"type":[UserWhereInput]}),
+  firstName: t.field({"required":false,"type":StringFilter}),
+  lastName: t.field({"required":false,"type":StringFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeNullableFilter}),
+  posts: t.field({"required":false,"type":PostListRelationFilter}),
+});
+export const UserWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserWhereUniqueInput>, false>('UserWhereUniqueInput').implement({
+  fields: UserWhereUniqueInputFields,
+});
+
+export const UserOrderByWithAggregationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  firstName: t.field({"required":false,"type":SortOrder}),
+  lastName: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+  _count: t.field({"required":false,"type":UserCountOrderByAggregateInput}),
+  _avg: t.field({"required":false,"type":UserAvgOrderByAggregateInput}),
+  _max: t.field({"required":false,"type":UserMaxOrderByAggregateInput}),
+  _min: t.field({"required":false,"type":UserMinOrderByAggregateInput}),
+  _sum: t.field({"required":false,"type":UserSumOrderByAggregateInput}),
+});
+export const UserOrderByWithAggregationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserOrderByWithAggregationInput>, false>('UserOrderByWithAggregationInput').implement({
+  fields: UserOrderByWithAggregationInputFields,
+});
+
+export const UserScalarWhereWithAggregatesInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[UserScalarWhereWithAggregatesInput]}),
+  OR: t.field({"required":false,"type":[UserScalarWhereWithAggregatesInput]}),
+  NOT: t.field({"required":false,"type":[UserScalarWhereWithAggregatesInput]}),
+  id: t.field({"required":false,"type":IntWithAggregatesFilter}),
+  firstName: t.field({"required":false,"type":StringWithAggregatesFilter}),
+  lastName: t.field({"required":false,"type":StringWithAggregatesFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeNullableWithAggregatesFilter}),
+});
+export const UserScalarWhereWithAggregatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserScalarWhereWithAggregatesInput>, false>('UserScalarWhereWithAggregatesInput').implement({
+  fields: UserScalarWhereWithAggregatesInputFields,
+});
+
+export const PostWhereInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[PostWhereInput]}),
+  OR: t.field({"required":false,"type":[PostWhereInput]}),
+  NOT: t.field({"required":false,"type":[PostWhereInput]}),
+  id: t.field({"required":false,"type":IntFilter}),
+  title: t.field({"required":false,"type":StringFilter}),
+  content: t.field({"required":false,"type":StringFilter}),
+  authorId: t.field({"required":false,"type":IntFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeNullableFilter}),
+  author: t.field({"required":false,"type":UserWhereInput}),
+});
+export const PostWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostWhereInput>, false>('PostWhereInput').implement({
+  fields: PostWhereInputFields,
+});
+
+export const PostOrderByWithRelationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  title: t.field({"required":false,"type":SortOrder}),
+  content: t.field({"required":false,"type":SortOrder}),
+  authorId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+  author: t.field({"required":false,"type":UserOrderByWithRelationInput}),
+});
+export const PostOrderByWithRelationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostOrderByWithRelationInput>, false>('PostOrderByWithRelationInput').implement({
+  fields: PostOrderByWithRelationInputFields,
+});
+
+export const PostWhereUniqueInputFields = (t: any) => ({
+  id: t.int({"required":false}),
+  AND: t.field({"required":false,"type":[PostWhereInput]}),
+  OR: t.field({"required":false,"type":[PostWhereInput]}),
+  NOT: t.field({"required":false,"type":[PostWhereInput]}),
+  title: t.field({"required":false,"type":StringFilter}),
+  content: t.field({"required":false,"type":StringFilter}),
+  authorId: t.field({"required":false,"type":IntFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeNullableFilter}),
+  author: t.field({"required":false,"type":UserWhereInput}),
+});
+export const PostWhereUniqueInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostWhereUniqueInput>, false>('PostWhereUniqueInput').implement({
+  fields: PostWhereUniqueInputFields,
+});
+
+export const PostOrderByWithAggregationInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  title: t.field({"required":false,"type":SortOrder}),
+  content: t.field({"required":false,"type":SortOrder}),
+  authorId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+  _count: t.field({"required":false,"type":PostCountOrderByAggregateInput}),
+  _avg: t.field({"required":false,"type":PostAvgOrderByAggregateInput}),
+  _max: t.field({"required":false,"type":PostMaxOrderByAggregateInput}),
+  _min: t.field({"required":false,"type":PostMinOrderByAggregateInput}),
+  _sum: t.field({"required":false,"type":PostSumOrderByAggregateInput}),
+});
+export const PostOrderByWithAggregationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostOrderByWithAggregationInput>, false>('PostOrderByWithAggregationInput').implement({
+  fields: PostOrderByWithAggregationInputFields,
+});
+
+export const PostScalarWhereWithAggregatesInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[PostScalarWhereWithAggregatesInput]}),
+  OR: t.field({"required":false,"type":[PostScalarWhereWithAggregatesInput]}),
+  NOT: t.field({"required":false,"type":[PostScalarWhereWithAggregatesInput]}),
+  id: t.field({"required":false,"type":IntWithAggregatesFilter}),
+  title: t.field({"required":false,"type":StringWithAggregatesFilter}),
+  content: t.field({"required":false,"type":StringWithAggregatesFilter}),
+  authorId: t.field({"required":false,"type":IntWithAggregatesFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeWithAggregatesFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeNullableWithAggregatesFilter}),
+});
+export const PostScalarWhereWithAggregatesInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostScalarWhereWithAggregatesInput>, false>('PostScalarWhereWithAggregatesInput').implement({
+  fields: PostScalarWhereWithAggregatesInputFields,
+});
+
+export const UserCreateInputFields = (t: any) => ({
+  firstName: t.string({"required":true}),
+  lastName: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  posts: t.field({"required":false,"type":PostCreateNestedManyWithoutAuthorInput}),
+});
+export const UserCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateInput>, false>('UserCreateInput').implement({
+  fields: UserCreateInputFields,
+});
+
+export const UserUpdateInputFields = (t: any) => ({
+  firstName: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  lastName: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
+  posts: t.field({"required":false,"type":PostUpdateManyWithoutAuthorNestedInput}),
+});
+export const UserUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateInput>, false>('UserUpdateInput').implement({
+  fields: UserUpdateInputFields,
+});
+
+export const UserCreateManyInputFields = (t: any) => ({
+  id: t.int({"required":false}),
+  firstName: t.string({"required":true}),
+  lastName: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+});
+export const UserCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateManyInput>, false>('UserCreateManyInput').implement({
+  fields: UserCreateManyInputFields,
+});
+
+export const UserUpdateManyMutationInputFields = (t: any) => ({
+  firstName: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  lastName: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
+});
+export const UserUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateManyMutationInput>, false>('UserUpdateManyMutationInput').implement({
+  fields: UserUpdateManyMutationInputFields,
+});
+
+export const PostCreateInputFields = (t: any) => ({
+  title: t.string({"required":true}),
+  content: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+  author: t.field({"required":true,"type":UserCreateNestedOneWithoutPostsInput}),
+});
+export const PostCreateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateInput>, false>('PostCreateInput').implement({
+  fields: PostCreateInputFields,
+});
+
+export const PostUpdateInputFields = (t: any) => ({
+  title: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  content: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
+  author: t.field({"required":false,"type":UserUpdateOneRequiredWithoutPostsNestedInput}),
+});
+export const PostUpdateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateInput>, false>('PostUpdateInput').implement({
+  fields: PostUpdateInputFields,
+});
+
+export const PostCreateManyInputFields = (t: any) => ({
+  id: t.int({"required":false}),
+  title: t.string({"required":true}),
+  content: t.string({"required":true}),
+  authorId: t.int({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+});
+export const PostCreateManyInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyInput>, false>('PostCreateManyInput').implement({
+  fields: PostCreateManyInputFields,
+});
+
+export const PostUpdateManyMutationInputFields = (t: any) => ({
+  title: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  content: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
+});
+export const PostUpdateManyMutationInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateManyMutationInput>, false>('PostUpdateManyMutationInput').implement({
+  fields: PostUpdateManyMutationInputFields,
+});
+
+export const IntFilterFields = (t: any) => ({
+  equals: t.int({"required":false}),
+  in: t.intList({"required":false}),
+  notIn: t.intList({"required":false}),
+  lt: t.int({"required":false}),
+  lte: t.int({"required":false}),
+  gt: t.int({"required":false}),
+  gte: t.int({"required":false}),
+  not: t.field({"required":false,"type":NestedIntFilter}),
+});
+export const IntFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.IntFilter>, false>('IntFilter').implement({
+  fields: IntFilterFields,
+});
+
+export const StringFilterFields = (t: any) => ({
+  equals: t.string({"required":false}),
+  in: t.stringList({"required":false}),
+  notIn: t.stringList({"required":false}),
+  lt: t.string({"required":false}),
+  lte: t.string({"required":false}),
+  gt: t.string({"required":false}),
+  gte: t.string({"required":false}),
+  contains: t.string({"required":false}),
+  startsWith: t.string({"required":false}),
+  endsWith: t.string({"required":false}),
+  mode: t.field({"required":false,"type":QueryMode}),
+  not: t.field({"required":false,"type":NestedStringFilter}),
+});
+export const StringFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringFilter>, false>('StringFilter').implement({
+  fields: StringFilterFields,
+});
+
+export const DateTimeFilterFields = (t: any) => ({
+  equals: t.field({"required":false,"type":DateTime}),
+  in: t.field({"required":false,"type":[DateTime]}),
+  notIn: t.field({"required":false,"type":[DateTime]}),
+  lt: t.field({"required":false,"type":DateTime}),
+  lte: t.field({"required":false,"type":DateTime}),
+  gt: t.field({"required":false,"type":DateTime}),
+  gte: t.field({"required":false,"type":DateTime}),
+  not: t.field({"required":false,"type":NestedDateTimeFilter}),
+});
+export const DateTimeFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.DateTimeFilter>, false>('DateTimeFilter').implement({
+  fields: DateTimeFilterFields,
+});
+
+export const DateTimeNullableFilterFields = (t: any) => ({
+  equals: t.field({"required":false,"type":DateTime}),
+  in: t.field({"required":false,"type":[DateTime]}),
+  notIn: t.field({"required":false,"type":[DateTime]}),
+  lt: t.field({"required":false,"type":DateTime}),
+  lte: t.field({"required":false,"type":DateTime}),
+  gt: t.field({"required":false,"type":DateTime}),
+  gte: t.field({"required":false,"type":DateTime}),
+  not: t.field({"required":false,"type":NestedDateTimeNullableFilter}),
+});
+export const DateTimeNullableFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.DateTimeNullableFilter>, false>('DateTimeNullableFilter').implement({
+  fields: DateTimeNullableFilterFields,
+});
+
+export const PostListRelationFilterFields = (t: any) => ({
+  every: t.field({"required":false,"type":PostWhereInput}),
+  some: t.field({"required":false,"type":PostWhereInput}),
+  none: t.field({"required":false,"type":PostWhereInput}),
+});
+export const PostListRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostListRelationFilter>, false>('PostListRelationFilter').implement({
+  fields: PostListRelationFilterFields,
+});
+
+export const PostOrderByRelationAggregateInputFields = (t: any) => ({
+  _count: t.field({"required":false,"type":SortOrder}),
+});
+export const PostOrderByRelationAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostOrderByRelationAggregateInput>, false>('PostOrderByRelationAggregateInput').implement({
+  fields: PostOrderByRelationAggregateInputFields,
+});
+
+export const UserCountOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  firstName: t.field({"required":false,"type":SortOrder}),
+  lastName: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+});
+export const UserCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCountOrderByAggregateInput>, false>('UserCountOrderByAggregateInput').implement({
+  fields: UserCountOrderByAggregateInputFields,
+});
+
+export const UserAvgOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+});
+export const UserAvgOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserAvgOrderByAggregateInput>, false>('UserAvgOrderByAggregateInput').implement({
+  fields: UserAvgOrderByAggregateInputFields,
+});
+
+export const UserMaxOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  firstName: t.field({"required":false,"type":SortOrder}),
+  lastName: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+});
+export const UserMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserMaxOrderByAggregateInput>, false>('UserMaxOrderByAggregateInput').implement({
+  fields: UserMaxOrderByAggregateInputFields,
+});
+
+export const UserMinOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  firstName: t.field({"required":false,"type":SortOrder}),
+  lastName: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+});
+export const UserMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserMinOrderByAggregateInput>, false>('UserMinOrderByAggregateInput').implement({
+  fields: UserMinOrderByAggregateInputFields,
+});
+
+export const UserSumOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+});
+export const UserSumOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserSumOrderByAggregateInput>, false>('UserSumOrderByAggregateInput').implement({
+  fields: UserSumOrderByAggregateInputFields,
+});
+
+export const IntWithAggregatesFilterFields = (t: any) => ({
+  equals: t.int({"required":false}),
+  in: t.intList({"required":false}),
+  notIn: t.intList({"required":false}),
+  lt: t.int({"required":false}),
+  lte: t.int({"required":false}),
+  gt: t.int({"required":false}),
+  gte: t.int({"required":false}),
+  not: t.field({"required":false,"type":NestedIntWithAggregatesFilter}),
+  _count: t.field({"required":false,"type":NestedIntFilter}),
+  _avg: t.field({"required":false,"type":NestedFloatFilter}),
+  _sum: t.field({"required":false,"type":NestedIntFilter}),
+  _min: t.field({"required":false,"type":NestedIntFilter}),
+  _max: t.field({"required":false,"type":NestedIntFilter}),
+});
+export const IntWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.IntWithAggregatesFilter>, false>('IntWithAggregatesFilter').implement({
+  fields: IntWithAggregatesFilterFields,
+});
+
+export const StringWithAggregatesFilterFields = (t: any) => ({
+  equals: t.string({"required":false}),
+  in: t.stringList({"required":false}),
+  notIn: t.stringList({"required":false}),
+  lt: t.string({"required":false}),
+  lte: t.string({"required":false}),
+  gt: t.string({"required":false}),
+  gte: t.string({"required":false}),
+  contains: t.string({"required":false}),
+  startsWith: t.string({"required":false}),
+  endsWith: t.string({"required":false}),
+  mode: t.field({"required":false,"type":QueryMode}),
+  not: t.field({"required":false,"type":NestedStringWithAggregatesFilter}),
+  _count: t.field({"required":false,"type":NestedIntFilter}),
+  _min: t.field({"required":false,"type":NestedStringFilter}),
+  _max: t.field({"required":false,"type":NestedStringFilter}),
+});
+export const StringWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringWithAggregatesFilter>, false>('StringWithAggregatesFilter').implement({
+  fields: StringWithAggregatesFilterFields,
+});
+
+export const DateTimeWithAggregatesFilterFields = (t: any) => ({
+  equals: t.field({"required":false,"type":DateTime}),
+  in: t.field({"required":false,"type":[DateTime]}),
+  notIn: t.field({"required":false,"type":[DateTime]}),
+  lt: t.field({"required":false,"type":DateTime}),
+  lte: t.field({"required":false,"type":DateTime}),
+  gt: t.field({"required":false,"type":DateTime}),
+  gte: t.field({"required":false,"type":DateTime}),
+  not: t.field({"required":false,"type":NestedDateTimeWithAggregatesFilter}),
+  _count: t.field({"required":false,"type":NestedIntFilter}),
+  _min: t.field({"required":false,"type":NestedDateTimeFilter}),
+  _max: t.field({"required":false,"type":NestedDateTimeFilter}),
+});
+export const DateTimeWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.DateTimeWithAggregatesFilter>, false>('DateTimeWithAggregatesFilter').implement({
+  fields: DateTimeWithAggregatesFilterFields,
+});
+
+export const DateTimeNullableWithAggregatesFilterFields = (t: any) => ({
+  equals: t.field({"required":false,"type":DateTime}),
+  in: t.field({"required":false,"type":[DateTime]}),
+  notIn: t.field({"required":false,"type":[DateTime]}),
+  lt: t.field({"required":false,"type":DateTime}),
+  lte: t.field({"required":false,"type":DateTime}),
+  gt: t.field({"required":false,"type":DateTime}),
+  gte: t.field({"required":false,"type":DateTime}),
+  not: t.field({"required":false,"type":NestedDateTimeNullableWithAggregatesFilter}),
+  _count: t.field({"required":false,"type":NestedIntNullableFilter}),
+  _min: t.field({"required":false,"type":NestedDateTimeNullableFilter}),
+  _max: t.field({"required":false,"type":NestedDateTimeNullableFilter}),
+});
+export const DateTimeNullableWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.DateTimeNullableWithAggregatesFilter>, false>('DateTimeNullableWithAggregatesFilter').implement({
+  fields: DateTimeNullableWithAggregatesFilterFields,
+});
+
+export const UserScalarRelationFilterFields = (t: any) => ({
+  is: t.field({"required":false,"type":UserWhereInput}),
+  isNot: t.field({"required":false,"type":UserWhereInput}),
+});
+export const UserScalarRelationFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserScalarRelationFilter>, false>('UserScalarRelationFilter').implement({
+  fields: UserScalarRelationFilterFields,
+});
+
+export const PostCountOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  title: t.field({"required":false,"type":SortOrder}),
+  content: t.field({"required":false,"type":SortOrder}),
+  authorId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+});
+export const PostCountOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCountOrderByAggregateInput>, false>('PostCountOrderByAggregateInput').implement({
+  fields: PostCountOrderByAggregateInputFields,
+});
+
+export const PostAvgOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  authorId: t.field({"required":false,"type":SortOrder}),
+});
+export const PostAvgOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostAvgOrderByAggregateInput>, false>('PostAvgOrderByAggregateInput').implement({
+  fields: PostAvgOrderByAggregateInputFields,
+});
+
+export const PostMaxOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  title: t.field({"required":false,"type":SortOrder}),
+  content: t.field({"required":false,"type":SortOrder}),
+  authorId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+});
+export const PostMaxOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostMaxOrderByAggregateInput>, false>('PostMaxOrderByAggregateInput').implement({
+  fields: PostMaxOrderByAggregateInputFields,
+});
+
+export const PostMinOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  title: t.field({"required":false,"type":SortOrder}),
+  content: t.field({"required":false,"type":SortOrder}),
+  authorId: t.field({"required":false,"type":SortOrder}),
+  createdAt: t.field({"required":false,"type":SortOrder}),
+  updatedAt: t.field({"required":false,"type":SortOrder}),
+});
+export const PostMinOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostMinOrderByAggregateInput>, false>('PostMinOrderByAggregateInput').implement({
+  fields: PostMinOrderByAggregateInputFields,
+});
+
+export const PostSumOrderByAggregateInputFields = (t: any) => ({
+  id: t.field({"required":false,"type":SortOrder}),
+  authorId: t.field({"required":false,"type":SortOrder}),
+});
+export const PostSumOrderByAggregateInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostSumOrderByAggregateInput>, false>('PostSumOrderByAggregateInput').implement({
+  fields: PostSumOrderByAggregateInputFields,
+});
+
+export const PostCreateNestedManyWithoutAuthorInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[PostCreateWithoutAuthorInput]}),
+  connectOrCreate: t.field({"required":false,"type":[PostCreateOrConnectWithoutAuthorInput]}),
+  createMany: t.field({"required":false,"type":PostCreateManyAuthorInputEnvelope}),
+  connect: t.field({"required":false,"type":[PostWhereUniqueInput]}),
+});
+export const PostCreateNestedManyWithoutAuthorInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateNestedManyWithoutAuthorInput>, false>('PostCreateNestedManyWithoutAuthorInput').implement({
+  fields: PostCreateNestedManyWithoutAuthorInputFields,
+});
+
+export const StringFieldUpdateOperationsInputFields = (t: any) => ({
+  set: t.string({"required":false}),
+});
+export const StringFieldUpdateOperationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.StringFieldUpdateOperationsInput>, false>('StringFieldUpdateOperationsInput').implement({
+  fields: StringFieldUpdateOperationsInputFields,
+});
+
+export const DateTimeFieldUpdateOperationsInputFields = (t: any) => ({
+  set: t.field({"required":false,"type":DateTime}),
+});
+export const DateTimeFieldUpdateOperationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.DateTimeFieldUpdateOperationsInput>, false>('DateTimeFieldUpdateOperationsInput').implement({
+  fields: DateTimeFieldUpdateOperationsInputFields,
+});
+
+export const NullableDateTimeFieldUpdateOperationsInputFields = (t: any) => ({
+  set: t.field({"required":false,"type":DateTime}),
+});
+export const NullableDateTimeFieldUpdateOperationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NullableDateTimeFieldUpdateOperationsInput>, false>('NullableDateTimeFieldUpdateOperationsInput').implement({
+  fields: NullableDateTimeFieldUpdateOperationsInputFields,
+});
+
+export const PostUpdateManyWithoutAuthorNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":[PostCreateWithoutAuthorInput]}),
+  connectOrCreate: t.field({"required":false,"type":[PostCreateOrConnectWithoutAuthorInput]}),
+  upsert: t.field({"required":false,"type":[PostUpsertWithWhereUniqueWithoutAuthorInput]}),
+  createMany: t.field({"required":false,"type":PostCreateManyAuthorInputEnvelope}),
+  set: t.field({"required":false,"type":[PostWhereUniqueInput]}),
+  disconnect: t.field({"required":false,"type":[PostWhereUniqueInput]}),
+  delete: t.field({"required":false,"type":[PostWhereUniqueInput]}),
+  connect: t.field({"required":false,"type":[PostWhereUniqueInput]}),
+  update: t.field({"required":false,"type":[PostUpdateWithWhereUniqueWithoutAuthorInput]}),
+  updateMany: t.field({"required":false,"type":[PostUpdateManyWithWhereWithoutAuthorInput]}),
+  deleteMany: t.field({"required":false,"type":[PostScalarWhereInput]}),
+});
+export const PostUpdateManyWithoutAuthorNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateManyWithoutAuthorNestedInput>, false>('PostUpdateManyWithoutAuthorNestedInput').implement({
+  fields: PostUpdateManyWithoutAuthorNestedInputFields,
+});
+
+export const IntFieldUpdateOperationsInputFields = (t: any) => ({
+  set: t.int({"required":false}),
+  increment: t.int({"required":false}),
+  decrement: t.int({"required":false}),
+  multiply: t.int({"required":false}),
+  divide: t.int({"required":false}),
+});
+export const IntFieldUpdateOperationsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.IntFieldUpdateOperationsInput>, false>('IntFieldUpdateOperationsInput').implement({
+  fields: IntFieldUpdateOperationsInputFields,
+});
+
+export const UserCreateNestedOneWithoutPostsInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":UserCreateWithoutPostsInput}),
+  connectOrCreate: t.field({"required":false,"type":UserCreateOrConnectWithoutPostsInput}),
+  connect: t.field({"required":false,"type":UserWhereUniqueInput}),
+});
+export const UserCreateNestedOneWithoutPostsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateNestedOneWithoutPostsInput>, false>('UserCreateNestedOneWithoutPostsInput').implement({
+  fields: UserCreateNestedOneWithoutPostsInputFields,
+});
+
+export const UserUpdateOneRequiredWithoutPostsNestedInputFields = (t: any) => ({
+  create: t.field({"required":false,"type":UserCreateWithoutPostsInput}),
+  connectOrCreate: t.field({"required":false,"type":UserCreateOrConnectWithoutPostsInput}),
+  upsert: t.field({"required":false,"type":UserUpsertWithoutPostsInput}),
+  connect: t.field({"required":false,"type":UserWhereUniqueInput}),
+  update: t.field({"required":false,"type":UserUpdateToOneWithWhereWithoutPostsInput}),
+});
+export const UserUpdateOneRequiredWithoutPostsNestedInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateOneRequiredWithoutPostsNestedInput>, false>('UserUpdateOneRequiredWithoutPostsNestedInput').implement({
+  fields: UserUpdateOneRequiredWithoutPostsNestedInputFields,
+});
+
+export const NestedIntFilterFields = (t: any) => ({
+  equals: t.int({"required":false}),
+  in: t.intList({"required":false}),
+  notIn: t.intList({"required":false}),
+  lt: t.int({"required":false}),
+  lte: t.int({"required":false}),
+  gt: t.int({"required":false}),
+  gte: t.int({"required":false}),
+  not: t.field({"required":false,"type":NestedIntFilter}),
+});
+export const NestedIntFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedIntFilter>, false>('NestedIntFilter').implement({
+  fields: NestedIntFilterFields,
+});
+
+export const NestedStringFilterFields = (t: any) => ({
+  equals: t.string({"required":false}),
+  in: t.stringList({"required":false}),
+  notIn: t.stringList({"required":false}),
+  lt: t.string({"required":false}),
+  lte: t.string({"required":false}),
+  gt: t.string({"required":false}),
+  gte: t.string({"required":false}),
+  contains: t.string({"required":false}),
+  startsWith: t.string({"required":false}),
+  endsWith: t.string({"required":false}),
+  not: t.field({"required":false,"type":NestedStringFilter}),
+});
+export const NestedStringFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedStringFilter>, false>('NestedStringFilter').implement({
+  fields: NestedStringFilterFields,
+});
+
+export const NestedDateTimeFilterFields = (t: any) => ({
+  equals: t.field({"required":false,"type":DateTime}),
+  in: t.field({"required":false,"type":[DateTime]}),
+  notIn: t.field({"required":false,"type":[DateTime]}),
+  lt: t.field({"required":false,"type":DateTime}),
+  lte: t.field({"required":false,"type":DateTime}),
+  gt: t.field({"required":false,"type":DateTime}),
+  gte: t.field({"required":false,"type":DateTime}),
+  not: t.field({"required":false,"type":NestedDateTimeFilter}),
+});
+export const NestedDateTimeFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedDateTimeFilter>, false>('NestedDateTimeFilter').implement({
+  fields: NestedDateTimeFilterFields,
+});
+
+export const NestedDateTimeNullableFilterFields = (t: any) => ({
+  equals: t.field({"required":false,"type":DateTime}),
+  in: t.field({"required":false,"type":[DateTime]}),
+  notIn: t.field({"required":false,"type":[DateTime]}),
+  lt: t.field({"required":false,"type":DateTime}),
+  lte: t.field({"required":false,"type":DateTime}),
+  gt: t.field({"required":false,"type":DateTime}),
+  gte: t.field({"required":false,"type":DateTime}),
+  not: t.field({"required":false,"type":NestedDateTimeNullableFilter}),
+});
+export const NestedDateTimeNullableFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedDateTimeNullableFilter>, false>('NestedDateTimeNullableFilter').implement({
+  fields: NestedDateTimeNullableFilterFields,
+});
+
+export const NestedIntWithAggregatesFilterFields = (t: any) => ({
+  equals: t.int({"required":false}),
+  in: t.intList({"required":false}),
+  notIn: t.intList({"required":false}),
+  lt: t.int({"required":false}),
+  lte: t.int({"required":false}),
+  gt: t.int({"required":false}),
+  gte: t.int({"required":false}),
+  not: t.field({"required":false,"type":NestedIntWithAggregatesFilter}),
+  _count: t.field({"required":false,"type":NestedIntFilter}),
+  _avg: t.field({"required":false,"type":NestedFloatFilter}),
+  _sum: t.field({"required":false,"type":NestedIntFilter}),
+  _min: t.field({"required":false,"type":NestedIntFilter}),
+  _max: t.field({"required":false,"type":NestedIntFilter}),
+});
+export const NestedIntWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedIntWithAggregatesFilter>, false>('NestedIntWithAggregatesFilter').implement({
+  fields: NestedIntWithAggregatesFilterFields,
+});
+
+export const NestedFloatFilterFields = (t: any) => ({
+  equals: t.float({"required":false}),
+  in: t.floatList({"required":false}),
+  notIn: t.floatList({"required":false}),
+  lt: t.float({"required":false}),
+  lte: t.float({"required":false}),
+  gt: t.float({"required":false}),
+  gte: t.float({"required":false}),
+  not: t.field({"required":false,"type":NestedFloatFilter}),
+});
+export const NestedFloatFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedFloatFilter>, false>('NestedFloatFilter').implement({
+  fields: NestedFloatFilterFields,
+});
+
+export const NestedStringWithAggregatesFilterFields = (t: any) => ({
+  equals: t.string({"required":false}),
+  in: t.stringList({"required":false}),
+  notIn: t.stringList({"required":false}),
+  lt: t.string({"required":false}),
+  lte: t.string({"required":false}),
+  gt: t.string({"required":false}),
+  gte: t.string({"required":false}),
+  contains: t.string({"required":false}),
+  startsWith: t.string({"required":false}),
+  endsWith: t.string({"required":false}),
+  not: t.field({"required":false,"type":NestedStringWithAggregatesFilter}),
+  _count: t.field({"required":false,"type":NestedIntFilter}),
+  _min: t.field({"required":false,"type":NestedStringFilter}),
+  _max: t.field({"required":false,"type":NestedStringFilter}),
+});
+export const NestedStringWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedStringWithAggregatesFilter>, false>('NestedStringWithAggregatesFilter').implement({
+  fields: NestedStringWithAggregatesFilterFields,
+});
+
+export const NestedDateTimeWithAggregatesFilterFields = (t: any) => ({
+  equals: t.field({"required":false,"type":DateTime}),
+  in: t.field({"required":false,"type":[DateTime]}),
+  notIn: t.field({"required":false,"type":[DateTime]}),
+  lt: t.field({"required":false,"type":DateTime}),
+  lte: t.field({"required":false,"type":DateTime}),
+  gt: t.field({"required":false,"type":DateTime}),
+  gte: t.field({"required":false,"type":DateTime}),
+  not: t.field({"required":false,"type":NestedDateTimeWithAggregatesFilter}),
+  _count: t.field({"required":false,"type":NestedIntFilter}),
+  _min: t.field({"required":false,"type":NestedDateTimeFilter}),
+  _max: t.field({"required":false,"type":NestedDateTimeFilter}),
+});
+export const NestedDateTimeWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedDateTimeWithAggregatesFilter>, false>('NestedDateTimeWithAggregatesFilter').implement({
+  fields: NestedDateTimeWithAggregatesFilterFields,
+});
+
+export const NestedDateTimeNullableWithAggregatesFilterFields = (t: any) => ({
+  equals: t.field({"required":false,"type":DateTime}),
+  in: t.field({"required":false,"type":[DateTime]}),
+  notIn: t.field({"required":false,"type":[DateTime]}),
+  lt: t.field({"required":false,"type":DateTime}),
+  lte: t.field({"required":false,"type":DateTime}),
+  gt: t.field({"required":false,"type":DateTime}),
+  gte: t.field({"required":false,"type":DateTime}),
+  not: t.field({"required":false,"type":NestedDateTimeNullableWithAggregatesFilter}),
+  _count: t.field({"required":false,"type":NestedIntNullableFilter}),
+  _min: t.field({"required":false,"type":NestedDateTimeNullableFilter}),
+  _max: t.field({"required":false,"type":NestedDateTimeNullableFilter}),
+});
+export const NestedDateTimeNullableWithAggregatesFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedDateTimeNullableWithAggregatesFilter>, false>('NestedDateTimeNullableWithAggregatesFilter').implement({
+  fields: NestedDateTimeNullableWithAggregatesFilterFields,
+});
+
+export const NestedIntNullableFilterFields = (t: any) => ({
+  equals: t.int({"required":false}),
+  in: t.intList({"required":false}),
+  notIn: t.intList({"required":false}),
+  lt: t.int({"required":false}),
+  lte: t.int({"required":false}),
+  gt: t.int({"required":false}),
+  gte: t.int({"required":false}),
+  not: t.field({"required":false,"type":NestedIntNullableFilter}),
+});
+export const NestedIntNullableFilter = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.NestedIntNullableFilter>, false>('NestedIntNullableFilter').implement({
+  fields: NestedIntNullableFilterFields,
+});
+
+export const PostCreateWithoutAuthorInputFields = (t: any) => ({
+  title: t.string({"required":true}),
+  content: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+});
+export const PostCreateWithoutAuthorInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateWithoutAuthorInput>, false>('PostCreateWithoutAuthorInput').implement({
+  fields: PostCreateWithoutAuthorInputFields,
+});
+
+export const PostCreateOrConnectWithoutAuthorInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":PostWhereUniqueInput}),
+  create: t.field({"required":true,"type":PostCreateWithoutAuthorInput}),
+});
+export const PostCreateOrConnectWithoutAuthorInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateOrConnectWithoutAuthorInput>, false>('PostCreateOrConnectWithoutAuthorInput').implement({
+  fields: PostCreateOrConnectWithoutAuthorInputFields,
+});
+
+export const PostCreateManyAuthorInputEnvelopeFields = (t: any) => ({
+  data: t.field({"required":true,"type":[PostCreateManyAuthorInput]}),
+  skipDuplicates: t.boolean({"required":false}),
+});
+export const PostCreateManyAuthorInputEnvelope = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyAuthorInputEnvelope>, false>('PostCreateManyAuthorInputEnvelope').implement({
+  fields: PostCreateManyAuthorInputEnvelopeFields,
+});
+
+export const PostUpsertWithWhereUniqueWithoutAuthorInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":PostWhereUniqueInput}),
+  update: t.field({"required":true,"type":PostUpdateWithoutAuthorInput}),
+  create: t.field({"required":true,"type":PostCreateWithoutAuthorInput}),
+});
+export const PostUpsertWithWhereUniqueWithoutAuthorInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpsertWithWhereUniqueWithoutAuthorInput>, false>('PostUpsertWithWhereUniqueWithoutAuthorInput').implement({
+  fields: PostUpsertWithWhereUniqueWithoutAuthorInputFields,
+});
+
+export const PostUpdateWithWhereUniqueWithoutAuthorInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":PostWhereUniqueInput}),
+  data: t.field({"required":true,"type":PostUpdateWithoutAuthorInput}),
+});
+export const PostUpdateWithWhereUniqueWithoutAuthorInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateWithWhereUniqueWithoutAuthorInput>, false>('PostUpdateWithWhereUniqueWithoutAuthorInput').implement({
+  fields: PostUpdateWithWhereUniqueWithoutAuthorInputFields,
+});
+
+export const PostUpdateManyWithWhereWithoutAuthorInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":PostScalarWhereInput}),
+  data: t.field({"required":true,"type":PostUpdateManyMutationInput}),
+});
+export const PostUpdateManyWithWhereWithoutAuthorInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateManyWithWhereWithoutAuthorInput>, false>('PostUpdateManyWithWhereWithoutAuthorInput').implement({
+  fields: PostUpdateManyWithWhereWithoutAuthorInputFields,
+});
+
+export const PostScalarWhereInputFields = (t: any) => ({
+  AND: t.field({"required":false,"type":[PostScalarWhereInput]}),
+  OR: t.field({"required":false,"type":[PostScalarWhereInput]}),
+  NOT: t.field({"required":false,"type":[PostScalarWhereInput]}),
+  id: t.field({"required":false,"type":IntFilter}),
+  title: t.field({"required":false,"type":StringFilter}),
+  content: t.field({"required":false,"type":StringFilter}),
+  authorId: t.field({"required":false,"type":IntFilter}),
+  createdAt: t.field({"required":false,"type":DateTimeFilter}),
+  updatedAt: t.field({"required":false,"type":DateTimeNullableFilter}),
+});
+export const PostScalarWhereInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostScalarWhereInput>, false>('PostScalarWhereInput').implement({
+  fields: PostScalarWhereInputFields,
+});
+
+export const UserCreateWithoutPostsInputFields = (t: any) => ({
+  firstName: t.string({"required":true}),
+  lastName: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+});
+export const UserCreateWithoutPostsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateWithoutPostsInput>, false>('UserCreateWithoutPostsInput').implement({
+  fields: UserCreateWithoutPostsInputFields,
+});
+
+export const UserCreateOrConnectWithoutPostsInputFields = (t: any) => ({
+  where: t.field({"required":true,"type":UserWhereUniqueInput}),
+  create: t.field({"required":true,"type":UserCreateWithoutPostsInput}),
+});
+export const UserCreateOrConnectWithoutPostsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserCreateOrConnectWithoutPostsInput>, false>('UserCreateOrConnectWithoutPostsInput').implement({
+  fields: UserCreateOrConnectWithoutPostsInputFields,
+});
+
+export const UserUpsertWithoutPostsInputFields = (t: any) => ({
+  update: t.field({"required":true,"type":UserUpdateWithoutPostsInput}),
+  create: t.field({"required":true,"type":UserCreateWithoutPostsInput}),
+  where: t.field({"required":false,"type":UserWhereInput}),
+});
+export const UserUpsertWithoutPostsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpsertWithoutPostsInput>, false>('UserUpsertWithoutPostsInput').implement({
+  fields: UserUpsertWithoutPostsInputFields,
+});
+
+export const UserUpdateToOneWithWhereWithoutPostsInputFields = (t: any) => ({
+  where: t.field({"required":false,"type":UserWhereInput}),
+  data: t.field({"required":true,"type":UserUpdateWithoutPostsInput}),
+});
+export const UserUpdateToOneWithWhereWithoutPostsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateToOneWithWhereWithoutPostsInput>, false>('UserUpdateToOneWithWhereWithoutPostsInput').implement({
+  fields: UserUpdateToOneWithWhereWithoutPostsInputFields,
+});
+
+export const UserUpdateWithoutPostsInputFields = (t: any) => ({
+  firstName: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  lastName: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
+});
+export const UserUpdateWithoutPostsInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.UserUpdateWithoutPostsInput>, false>('UserUpdateWithoutPostsInput').implement({
+  fields: UserUpdateWithoutPostsInputFields,
+});
+
+export const PostCreateManyAuthorInputFields = (t: any) => ({
+  id: t.int({"required":false}),
+  title: t.string({"required":true}),
+  content: t.string({"required":true}),
+  createdAt: t.field({"required":false,"type":DateTime}),
+  updatedAt: t.field({"required":false,"type":DateTime}),
+});
+export const PostCreateManyAuthorInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostCreateManyAuthorInput>, false>('PostCreateManyAuthorInput').implement({
+  fields: PostCreateManyAuthorInputFields,
+});
+
+export const PostUpdateWithoutAuthorInputFields = (t: any) => ({
+  title: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  content: t.field({"required":false,"type":StringFieldUpdateOperationsInput}),
+  createdAt: t.field({"required":false,"type":DateTimeFieldUpdateOperationsInput}),
+  updatedAt: t.field({"required":false,"type":NullableDateTimeFieldUpdateOperationsInput}),
+});
+export const PostUpdateWithoutAuthorInput = builder.inputRef<PrismaUpdateOperationsInputFilter<Prisma.PostUpdateWithoutAuthorInput>, false>('PostUpdateWithoutAuthorInput').implement({
+  fields: PostUpdateWithoutAuthorInputFields,
+});
+//// FILE: generated/Post/index.ts
+export {
+  PostObject,
+  PostIdFieldObject,
+  PostTitleFieldObject,
+  PostContentFieldObject,
+  PostAuthorFieldObject,
+  PostAuthorIdFieldObject,
+  PostCreatedAtFieldObject,
+  PostUpdatedAtFieldObject
+} from './object.base';
+export {
+  createManyPostMutation,
+  createOnePostMutation,
+  deleteManyPostMutation,
+  deleteOnePostMutation,
+  updateManyPostMutation,
+  updateOnePostMutation,
+  upsertOnePostMutation,
+  createManyPostMutationObject,
+  createOnePostMutationObject,
+  deleteManyPostMutationObject,
+  deleteOnePostMutationObject,
+  updateManyPostMutationObject,
+  updateOnePostMutationObject,
+  upsertOnePostMutationObject
+} from './mutations';
+export {
+  findFirstPostQuery,
+  findManyPostQuery,
+  countPostQuery,
+  findUniquePostQuery,
+  findFirstPostQueryObject,
+  findManyPostQueryObject,
+  countPostQueryObject,
+  findUniquePostQueryObject
+} from './queries';
+
+//// FILE: generated/Post/mutations/createMany.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationPrismaObject } from '../../utils';
+
+export const createManyPostMutationArgs = builder.args((t) => ({ data: t.field({ type: [Inputs.PostCreateInput], required: true }) }))
+
+export const createManyPostMutationObject = defineMutationFunction((t) =>
+  defineMutationPrismaObject({
+    type: ['Post'],
+    nullable: false,
+    args: createManyPostMutationArgs,
+    resolve: async (_query, _root, args, _context, _info) =>
+      await _context.prisma.$transaction(args.data.map((data) => _context.prisma.post.create({ data }))),
+  }),
+);
+
+export const createManyPostMutation = defineMutation((t) => ({
+  createManyPost: t.prismaField(createManyPostMutationObject(t)),
+}));
+
+//// FILE: generated/Post/mutations/createOne.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationPrismaObject } from '../../utils';
+
+export const createOnePostMutationArgs = builder.args((t) => ({ data: t.field({ type: Inputs.PostCreateInput, required: true }) }))
+
+export const createOnePostMutationObject = defineMutationFunction((t) =>
+  defineMutationPrismaObject({
+    type: 'Post',
+    nullable: false,
+    args: createOnePostMutationArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.post.create({ data: args.data, ...query }),
+  }),
+);
+
+export const createOnePostMutation = defineMutation((t) => ({
+  createOnePost: t.prismaField(createOnePostMutationObject(t)),
+}));
+
+//// FILE: generated/Post/mutations/deleteMany.base.ts
+import * as Inputs from '../../inputs';
+import { BatchPayload } from '../../objects';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationObject } from '../../utils';
+
+export const deleteManyPostMutationArgs = builder.args((t) => ({ where: t.field({ type: Inputs.PostWhereInput, required: true }) }))
+
+export const deleteManyPostMutationObject = defineMutationFunction((t) =>
+  defineMutationObject({
+    type: BatchPayload,
+    nullable: true,
+    args: deleteManyPostMutationArgs,
+    resolve: async (_root, args, _context, _info) =>
+      await _context.prisma.post.deleteMany({ where: args.where }),
+  }),
+);
+
+export const deleteManyPostMutation = defineMutation((t) => ({
+  deleteManyPost: t.field(deleteManyPostMutationObject(t)),
+}));
+
+//// FILE: generated/Post/mutations/deleteOne.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationPrismaObject } from '../../utils';
+
+export const deleteOnePostMutationArgs = builder.args((t) => ({ where: t.field({ type: Inputs.PostWhereUniqueInput, required: true }) }))
+
+export const deleteOnePostMutationObject = defineMutationFunction((t) =>
+  defineMutationPrismaObject({
+    type: 'Post',
+    nullable: true,
+    args: deleteOnePostMutationArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.post.delete({ where: args.where, ...query }),
+  }),
+);
+
+export const deleteOnePostMutation = defineMutation((t) => ({
+  deleteOnePost: t.prismaField(deleteOnePostMutationObject(t)),
+}));
+
+//// FILE: generated/Post/mutations/index.ts
+export { createManyPostMutation, createManyPostMutationObject } from './createMany.base';
+export { createOnePostMutation, createOnePostMutationObject } from './createOne.base';
+export { deleteManyPostMutation, deleteManyPostMutationObject } from './deleteMany.base';
+export { deleteOnePostMutation, deleteOnePostMutationObject } from './deleteOne.base';
+export { updateManyPostMutation, updateManyPostMutationObject } from './updateMany.base';
+export { updateOnePostMutation, updateOnePostMutationObject } from './updateOne.base';
+export { upsertOnePostMutation, upsertOnePostMutationObject } from './upsertOne.base';
+
+//// FILE: generated/Post/mutations/updateMany.base.ts
+import * as Inputs from '../../inputs';
+import { BatchPayload } from '../../objects';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationObject } from '../../utils';
+
+export const updateManyPostMutationArgs = builder.args((t) => ({
+      where: t.field({ type: Inputs.PostWhereInput, required: false }),
+      data: t.field({ type: Inputs.PostUpdateManyMutationInput, required: true }),
+    }))
+
+export const updateManyPostMutationObject = defineMutationFunction((t) =>
+  defineMutationObject({
+    type: BatchPayload,
+    nullable: false,
+    args: updateManyPostMutationArgs,
+    resolve: async (_root, args, _context, _info) =>
+      await _context.prisma.post.updateMany({ where: args.where || undefined, data: args.data }),
+  }),
+);
+
+export const updateManyPostMutation = defineMutation((t) => ({
+  updateManyPost: t.field(updateManyPostMutationObject(t)),
+}));
+
+//// FILE: generated/Post/mutations/updateOne.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationPrismaObject } from '../../utils';
+
+export const updateOnePostMutationArgs = builder.args((t) => ({
+      where: t.field({ type: Inputs.PostWhereUniqueInput, required: true }),
+      data: t.field({ type: Inputs.PostUpdateInput, required: true }),
+    }))
+
+export const updateOnePostMutationObject = defineMutationFunction((t) =>
+  defineMutationPrismaObject({
+    type: 'Post',
+    nullable: true,
+    args: updateOnePostMutationArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.post.update({ where: args.where, data: args.data, ...query }),
+  }),
+);
+
+export const updateOnePostMutation = defineMutation((t) => ({
+  updateOnePost: t.prismaField(updateOnePostMutationObject(t)),
+}));
+
+//// FILE: generated/Post/mutations/upsertOne.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationPrismaObject } from '../../utils';
+
+export const upsertOnePostMutationArgs = builder.args((t) => ({
+      where: t.field({ type: Inputs.PostWhereUniqueInput, required: true }),
+      create: t.field({ type: Inputs.PostCreateInput, required: true }),
+      update: t.field({ type: Inputs.PostUpdateInput, required: true }),
+    }))
+
+export const upsertOnePostMutationObject = defineMutationFunction((t) =>
+  defineMutationPrismaObject({
+    type: 'Post',
+    nullable: false,
+    args: upsertOnePostMutationArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.post.upsert({
+        where: args.where,
+        create: args.create,
+        update: args.update,
+        ...query,
+      }),
+  }),
+);
+
+export const upsertOnePostMutation = defineMutation((t) => ({
+  upsertOnePost: t.prismaField(upsertOnePostMutationObject(t)),
+}));
+
+//// FILE: generated/Post/object.base.ts
+import * as Inputs from '../inputs';
+import { builder } from '../../builder';
+import {
+  definePrismaObject,
+  defineFieldObject,
+  defineRelationFunction,
+  defineRelationObject,
+} from '../utils';
+
+export const PostObject = definePrismaObject('Post', {
+  description: undefined,
+  findUnique: ({ id }) => ({ id }),
+  fields: (t) => ({
+    id: t.field(PostIdFieldObject),
+    title: t.field(PostTitleFieldObject),
+    content: t.field(PostContentFieldObject),
+    author: t.relation('author', PostAuthorFieldObject),
+    authorId: t.field(PostAuthorIdFieldObject),
+    createdAt: t.field(PostCreatedAtFieldObject),
+    updatedAt: t.field(PostUpdatedAtFieldObject),
+  }),
+});
+
+export const PostIdFieldObject = defineFieldObject('Post', {
+  type: "ID",
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => String(parent.id),
+});
+
+export const PostTitleFieldObject = defineFieldObject('Post', {
+  type: "String",
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.title,
+});
+
+export const PostContentFieldObject = defineFieldObject('Post', {
+  type: "String",
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.content,
+});
+
+export const PostAuthorFieldObject = defineRelationObject('Post', 'author', {
+  description: undefined,
+  nullable: false,
+  args: undefined,
+  query: undefined,
+});
+
+export const PostAuthorIdFieldObject = defineFieldObject('Post', {
+  type: "Int",
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.authorId,
+});
+
+export const PostCreatedAtFieldObject = defineFieldObject('Post', {
+  type: Inputs.DateTime,
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.createdAt,
+});
+
+export const PostUpdatedAtFieldObject = defineFieldObject('Post', {
+  type: Inputs.DateTime,
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.updatedAt,
+});
+
+//// FILE: generated/Post/queries/count.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineQuery, defineQueryFunction, defineQueryObject } from '../../utils';
+
+export const countPostQueryArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.PostWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.PostOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.PostWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.PostScalarFieldEnum], required: false }),
+}))
+
+export const countPostQueryObject = defineQueryFunction((t) =>
+  defineQueryObject({
+    type: 'Int',
+    nullable: false,
+    args: countPostQueryArgs,
+    resolve: async (_root, args, _context, _info) =>
+      await _context.prisma.post.count({
+        where: args.where || undefined,
+        cursor: args.cursor || undefined,
+        take: args.take || undefined,
+        skip: args.skip || undefined,
+        orderBy: args.orderBy || undefined,
+      }),
+  }),
+);
+
+export const countPostQuery = defineQuery((t) => ({
+  countPost: t.field(countPostQueryObject(t)),
+}));
+
+//// FILE: generated/Post/queries/findFirst.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineQuery, defineQueryFunction, defineQueryPrismaObject } from '../../utils';
+
+export const findFirstPostQueryArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.PostWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.PostOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.PostWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.PostScalarFieldEnum], required: false }),
+}))
+
+export const findFirstPostQueryObject = defineQueryFunction((t) =>
+  defineQueryPrismaObject({
+    type: 'Post',
+    nullable: true,
+    args: findFirstPostQueryArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.post.findFirst({
+        where: args.where || undefined,
+        cursor: args.cursor || undefined,
+        take: args.take || undefined,
+        distinct: args.distinct || undefined,
+        skip: args.skip || undefined,
+        orderBy: args.orderBy || undefined,
+        ...query,
+      }),
+  }),
+);
+
+export const findFirstPostQuery = defineQuery((t) => ({
+  findFirstPost: t.prismaField(findFirstPostQueryObject(t)),
+}));
+
+//// FILE: generated/Post/queries/findMany.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineQuery, defineQueryFunction, defineQueryPrismaObject } from '../../utils';
+
+export const findManyPostQueryArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.PostWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.PostOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.PostWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.PostScalarFieldEnum], required: false }),
+}))
+
+export const findManyPostQueryObject = defineQueryFunction((t) =>
+  defineQueryPrismaObject({
+    type: ['Post'],
+    nullable: false,
+    args: findManyPostQueryArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.post.findMany({
+        where: args.where || undefined,
+        cursor: args.cursor || undefined,
+        take: args.take || undefined,
+        distinct: args.distinct || undefined,
+        skip: args.skip || undefined,
+        orderBy: args.orderBy || undefined,
+        ...query,
+      }),
+  }),
+);
+
+export const findManyPostQuery = defineQuery((t) => ({
+  findManyPost: t.prismaField(findManyPostQueryObject(t)),
+}));
+
+//// FILE: generated/Post/queries/findUnique.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineQuery, defineQueryFunction, defineQueryPrismaObject } from '../../utils';
+
+export const findUniquePostQueryArgs = builder.args((t) => ({ where: t.field({ type: Inputs.PostWhereUniqueInput, required: true }) }))
+
+export const findUniquePostQueryObject = defineQueryFunction((t) =>
+  defineQueryPrismaObject({
+    type: 'Post',
+    nullable: true,
+    args: findUniquePostQueryArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.post.findUnique({ where: args.where, ...query }),
+  }),
+);
+
+export const findUniquePostQuery = defineQuery((t) => ({
+  findUniquePost: t.prismaField(findUniquePostQueryObject(t)),
+}));
+
+//// FILE: generated/Post/queries/index.ts
+export { findFirstPostQuery, findFirstPostQueryObject } from './findFirst.base';
+export { findManyPostQuery, findManyPostQueryObject } from './findMany.base';
+export { countPostQuery, countPostQueryObject } from './count.base';
+export { findUniquePostQuery, findUniquePostQueryObject } from './findUnique.base';
+
+//// FILE: generated/User/index.ts
+export {
+  UserObject,
+  UserIdFieldObject,
+  UserFirstNameFieldObject,
+  UserLastNameFieldObject,
+  UserPostsFieldObject,
+  UserCreatedAtFieldObject,
+  UserUpdatedAtFieldObject
+} from './object.base';
+export {
+  createManyUserMutation,
+  createOneUserMutation,
+  deleteManyUserMutation,
+  deleteOneUserMutation,
+  updateManyUserMutation,
+  updateOneUserMutation,
+  upsertOneUserMutation,
+  createManyUserMutationObject,
+  createOneUserMutationObject,
+  deleteManyUserMutationObject,
+  deleteOneUserMutationObject,
+  updateManyUserMutationObject,
+  updateOneUserMutationObject,
+  upsertOneUserMutationObject
+} from './mutations';
+export {
+  findFirstUserQuery,
+  findManyUserQuery,
+  countUserQuery,
+  findUniqueUserQuery,
+  findFirstUserQueryObject,
+  findManyUserQueryObject,
+  countUserQueryObject,
+  findUniqueUserQueryObject
+} from './queries';
+
+//// FILE: generated/User/mutations/createMany.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationPrismaObject } from '../../utils';
+
+export const createManyUserMutationArgs = builder.args((t) => ({ data: t.field({ type: [Inputs.UserCreateInput], required: true }) }))
+
+export const createManyUserMutationObject = defineMutationFunction((t) =>
+  defineMutationPrismaObject({
+    type: ['User'],
+    nullable: false,
+    args: createManyUserMutationArgs,
+    resolve: async (_query, _root, args, _context, _info) =>
+      await _context.prisma.$transaction(args.data.map((data) => _context.prisma.user.create({ data }))),
+  }),
+);
+
+export const createManyUserMutation = defineMutation((t) => ({
+  createManyUser: t.prismaField(createManyUserMutationObject(t)),
+}));
+
+//// FILE: generated/User/mutations/createOne.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationPrismaObject } from '../../utils';
+
+export const createOneUserMutationArgs = builder.args((t) => ({ data: t.field({ type: Inputs.UserCreateInput, required: true }) }))
+
+export const createOneUserMutationObject = defineMutationFunction((t) =>
+  defineMutationPrismaObject({
+    type: 'User',
+    nullable: false,
+    args: createOneUserMutationArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.user.create({ data: args.data, ...query }),
+  }),
+);
+
+export const createOneUserMutation = defineMutation((t) => ({
+  createOneUser: t.prismaField(createOneUserMutationObject(t)),
+}));
+
+//// FILE: generated/User/mutations/deleteMany.base.ts
+import * as Inputs from '../../inputs';
+import { BatchPayload } from '../../objects';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationObject } from '../../utils';
+
+export const deleteManyUserMutationArgs = builder.args((t) => ({ where: t.field({ type: Inputs.UserWhereInput, required: true }) }))
+
+export const deleteManyUserMutationObject = defineMutationFunction((t) =>
+  defineMutationObject({
+    type: BatchPayload,
+    nullable: true,
+    args: deleteManyUserMutationArgs,
+    resolve: async (_root, args, _context, _info) =>
+      await _context.prisma.user.deleteMany({ where: args.where }),
+  }),
+);
+
+export const deleteManyUserMutation = defineMutation((t) => ({
+  deleteManyUser: t.field(deleteManyUserMutationObject(t)),
+}));
+
+//// FILE: generated/User/mutations/deleteOne.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationPrismaObject } from '../../utils';
+
+export const deleteOneUserMutationArgs = builder.args((t) => ({ where: t.field({ type: Inputs.UserWhereUniqueInput, required: true }) }))
+
+export const deleteOneUserMutationObject = defineMutationFunction((t) =>
+  defineMutationPrismaObject({
+    type: 'User',
+    nullable: true,
+    args: deleteOneUserMutationArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.user.delete({ where: args.where, ...query }),
+  }),
+);
+
+export const deleteOneUserMutation = defineMutation((t) => ({
+  deleteOneUser: t.prismaField(deleteOneUserMutationObject(t)),
+}));
+
+//// FILE: generated/User/mutations/index.ts
+export { createManyUserMutation, createManyUserMutationObject } from './createMany.base';
+export { createOneUserMutation, createOneUserMutationObject } from './createOne.base';
+export { deleteManyUserMutation, deleteManyUserMutationObject } from './deleteMany.base';
+export { deleteOneUserMutation, deleteOneUserMutationObject } from './deleteOne.base';
+export { updateManyUserMutation, updateManyUserMutationObject } from './updateMany.base';
+export { updateOneUserMutation, updateOneUserMutationObject } from './updateOne.base';
+export { upsertOneUserMutation, upsertOneUserMutationObject } from './upsertOne.base';
+
+//// FILE: generated/User/mutations/updateMany.base.ts
+import * as Inputs from '../../inputs';
+import { BatchPayload } from '../../objects';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationObject } from '../../utils';
+
+export const updateManyUserMutationArgs = builder.args((t) => ({
+      where: t.field({ type: Inputs.UserWhereInput, required: false }),
+      data: t.field({ type: Inputs.UserUpdateManyMutationInput, required: true }),
+    }))
+
+export const updateManyUserMutationObject = defineMutationFunction((t) =>
+  defineMutationObject({
+    type: BatchPayload,
+    nullable: false,
+    args: updateManyUserMutationArgs,
+    resolve: async (_root, args, _context, _info) =>
+      await _context.prisma.user.updateMany({ where: args.where || undefined, data: args.data }),
+  }),
+);
+
+export const updateManyUserMutation = defineMutation((t) => ({
+  updateManyUser: t.field(updateManyUserMutationObject(t)),
+}));
+
+//// FILE: generated/User/mutations/updateOne.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationPrismaObject } from '../../utils';
+
+export const updateOneUserMutationArgs = builder.args((t) => ({
+      where: t.field({ type: Inputs.UserWhereUniqueInput, required: true }),
+      data: t.field({ type: Inputs.UserUpdateInput, required: true }),
+    }))
+
+export const updateOneUserMutationObject = defineMutationFunction((t) =>
+  defineMutationPrismaObject({
+    type: 'User',
+    nullable: true,
+    args: updateOneUserMutationArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.user.update({ where: args.where, data: args.data, ...query }),
+  }),
+);
+
+export const updateOneUserMutation = defineMutation((t) => ({
+  updateOneUser: t.prismaField(updateOneUserMutationObject(t)),
+}));
+
+//// FILE: generated/User/mutations/upsertOne.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineMutation, defineMutationFunction, defineMutationPrismaObject } from '../../utils';
+
+export const upsertOneUserMutationArgs = builder.args((t) => ({
+      where: t.field({ type: Inputs.UserWhereUniqueInput, required: true }),
+      create: t.field({ type: Inputs.UserCreateInput, required: true }),
+      update: t.field({ type: Inputs.UserUpdateInput, required: true }),
+    }))
+
+export const upsertOneUserMutationObject = defineMutationFunction((t) =>
+  defineMutationPrismaObject({
+    type: 'User',
+    nullable: false,
+    args: upsertOneUserMutationArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.user.upsert({
+        where: args.where,
+        create: args.create,
+        update: args.update,
+        ...query,
+      }),
+  }),
+);
+
+export const upsertOneUserMutation = defineMutation((t) => ({
+  upsertOneUser: t.prismaField(upsertOneUserMutationObject(t)),
+}));
+
+//// FILE: generated/User/object.base.ts
+import * as Inputs from '../inputs';
+import { builder } from '../../builder';
+import {
+  definePrismaObject,
+  defineFieldObject,
+  defineRelationFunction,
+  defineRelationObject,
+} from '../utils';
+
+export const UserObject = definePrismaObject('User', {
+  description: undefined,
+  findUnique: ({ id }) => ({ id }),
+  fields: (t) => ({
+    id: t.field(UserIdFieldObject),
+    firstName: t.field(UserFirstNameFieldObject),
+    lastName: t.field(UserLastNameFieldObject),
+    posts: t.relation('posts', UserPostsFieldObject(t)),
+    createdAt: t.field(UserCreatedAtFieldObject),
+    updatedAt: t.field(UserUpdatedAtFieldObject),
+  }),
+});
+
+export const UserIdFieldObject = defineFieldObject('User', {
+  type: "ID",
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => String(parent.id),
+});
+
+export const UserFirstNameFieldObject = defineFieldObject('User', {
+  type: "String",
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.firstName,
+});
+
+export const UserLastNameFieldObject = defineFieldObject('User', {
+  type: "String",
+  description: 'lastname description',
+  nullable: false,
+  resolve: (parent) => parent.lastName,
+});
+
+export const UserPostsFieldArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.PostWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.PostOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.PostWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.PostScalarFieldEnum], required: false }),
+}))
+
+export const UserPostsFieldObject = defineRelationFunction('User', (t) =>
+  defineRelationObject('User', 'posts', {
+    description: 'relation desc',
+    nullable: false,
+    args: UserPostsFieldArgs,
+    query: (args) => ({
+      where: args.where || undefined,
+      cursor: args.cursor || undefined,
+      take: args.take || undefined,
+      distinct: args.distinct || undefined,
+      skip: args.skip || undefined,
+      orderBy: args.orderBy || undefined,
+    }),
+  }),
+);
+
+export const UserCreatedAtFieldObject = defineFieldObject('User', {
+  type: Inputs.DateTime,
+  description: undefined,
+  nullable: false,
+  resolve: (parent) => parent.createdAt,
+});
+
+export const UserUpdatedAtFieldObject = defineFieldObject('User', {
+  type: Inputs.DateTime,
+  description: undefined,
+  nullable: true,
+  resolve: (parent) => parent.updatedAt,
+});
+
+//// FILE: generated/User/queries/count.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineQuery, defineQueryFunction, defineQueryObject } from '../../utils';
+
+export const countUserQueryArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.UserWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.UserOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.UserWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.UserScalarFieldEnum], required: false }),
+}))
+
+export const countUserQueryObject = defineQueryFunction((t) =>
+  defineQueryObject({
+    type: 'Int',
+    nullable: false,
+    args: countUserQueryArgs,
+    resolve: async (_root, args, _context, _info) =>
+      await _context.prisma.user.count({
+        where: args.where || undefined,
+        cursor: args.cursor || undefined,
+        take: args.take || undefined,
+        skip: args.skip || undefined,
+        orderBy: args.orderBy || undefined,
+      }),
+  }),
+);
+
+export const countUserQuery = defineQuery((t) => ({
+  countUser: t.field(countUserQueryObject(t)),
+}));
+
+//// FILE: generated/User/queries/findFirst.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineQuery, defineQueryFunction, defineQueryPrismaObject } from '../../utils';
+
+export const findFirstUserQueryArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.UserWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.UserOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.UserWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.UserScalarFieldEnum], required: false }),
+}))
+
+export const findFirstUserQueryObject = defineQueryFunction((t) =>
+  defineQueryPrismaObject({
+    type: 'User',
+    nullable: true,
+    args: findFirstUserQueryArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.user.findFirst({
+        where: args.where || undefined,
+        cursor: args.cursor || undefined,
+        take: args.take || undefined,
+        distinct: args.distinct || undefined,
+        skip: args.skip || undefined,
+        orderBy: args.orderBy || undefined,
+        ...query,
+      }),
+  }),
+);
+
+export const findFirstUserQuery = defineQuery((t) => ({
+  findFirstUser: t.prismaField(findFirstUserQueryObject(t)),
+}));
+
+//// FILE: generated/User/queries/findMany.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineQuery, defineQueryFunction, defineQueryPrismaObject } from '../../utils';
+
+export const findManyUserQueryArgs = builder.args((t) => ({
+  where: t.field({ type: Inputs.UserWhereInput, required: false }),
+  orderBy: t.field({ type: [Inputs.UserOrderByWithRelationInput], required: false }),
+  cursor: t.field({ type: Inputs.UserWhereUniqueInput, required: false }),
+  take: t.field({ type: 'Int', required: false }),
+  skip: t.field({ type: 'Int', required: false }),
+  distinct: t.field({ type: [Inputs.UserScalarFieldEnum], required: false }),
+}))
+
+export const findManyUserQueryObject = defineQueryFunction((t) =>
+  defineQueryPrismaObject({
+    type: ['User'],
+    nullable: false,
+    args: findManyUserQueryArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.user.findMany({
+        where: args.where || undefined,
+        cursor: args.cursor || undefined,
+        take: args.take || undefined,
+        distinct: args.distinct || undefined,
+        skip: args.skip || undefined,
+        orderBy: args.orderBy || undefined,
+        ...query,
+      }),
+  }),
+);
+
+export const findManyUserQuery = defineQuery((t) => ({
+  findManyUser: t.prismaField(findManyUserQueryObject(t)),
+}));
+
+//// FILE: generated/User/queries/findUnique.base.ts
+import * as Inputs from '../../inputs';
+import { builder } from '../../../builder';
+import { defineQuery, defineQueryFunction, defineQueryPrismaObject } from '../../utils';
+
+export const findUniqueUserQueryArgs = builder.args((t) => ({ where: t.field({ type: Inputs.UserWhereUniqueInput, required: true }) }))
+
+export const findUniqueUserQueryObject = defineQueryFunction((t) =>
+  defineQueryPrismaObject({
+    type: 'User',
+    nullable: true,
+    args: findUniqueUserQueryArgs,
+    resolve: async (query, _root, args, _context, _info) =>
+      await _context.prisma.user.findUnique({ where: args.where, ...query }),
+  }),
+);
+
+export const findUniqueUserQuery = defineQuery((t) => ({
+  findUniqueUser: t.prismaField(findUniqueUserQueryObject(t)),
+}));
+
+//// FILE: generated/User/queries/index.ts
+export { findFirstUserQuery, findFirstUserQueryObject } from './findFirst.base';
+export { findManyUserQuery, findManyUserQueryObject } from './findMany.base';
+export { countUserQuery, countUserQueryObject } from './count.base';
+export { findUniqueUserQuery, findUniqueUserQueryObject } from './findUnique.base';
+
+//// FILE: generated/autocrud.ts
+import * as User from './User';
+import * as Post from './Post';
+import { builder } from '../builder';
+import * as Objects from './objects';
+
+type Model = Objects.Model;
+
+export const Cruds: Record<
+  Objects.Model,
+  {
+    Object: any;
+    queries: Record<string, Function>;
+    mutations: Record<string, Function>;
+  }
+> = {
+  User: {
+    Object: User.UserObject,
+    queries: {
+      findFirst: User.findFirstUserQueryObject,
+      findMany: User.findManyUserQueryObject,
+      count: User.countUserQueryObject,
+      findUnique: User.findUniqueUserQueryObject,
+    },
+    mutations: {
+      createMany: User.createManyUserMutationObject,
+      createOne: User.createOneUserMutationObject,
+      deleteMany: User.deleteManyUserMutationObject,
+      deleteOne: User.deleteOneUserMutationObject,
+      updateMany: User.updateManyUserMutationObject,
+      updateOne: User.updateOneUserMutationObject,
+      upsertOne: User.upsertOneUserMutationObject,
+    },
+  },
+  Post: {
+    Object: Post.PostObject,
+    queries: {
+      findFirst: Post.findFirstPostQueryObject,
+      findMany: Post.findManyPostQueryObject,
+      count: Post.countPostQueryObject,
+      findUnique: Post.findUniquePostQueryObject,
+    },
+    mutations: {
+      createMany: Post.createManyPostMutationObject,
+      createOne: Post.createOnePostMutationObject,
+      deleteMany: Post.deleteManyPostMutationObject,
+      deleteOne: Post.deleteOnePostMutationObject,
+      updateMany: Post.updateManyPostMutationObject,
+      updateOne: Post.updateOnePostMutationObject,
+      upsertOne: Post.upsertOnePostMutationObject,
+    },
+  },
+};
+
+const crudEntries = Object.entries(Cruds);
+
+type ResolverType = "Query" | "Mutation";
+function generateResolversByType(type: ResolverType, opts?: CrudOptions) {
+  return crudEntries
+    .filter(([modelName]) => includeModel(modelName, opts))
+    .map(([modelName, config]) => {
+      const resolverEntries = Object.entries(config[type === "Query" ? "queries" : "mutations"]);
+
+      return resolverEntries.map(([operationName, resolverObjectDefiner]) => {
+        const resolverName = operationName + modelName;
+        const isntPrismaFieldList = ["count", "deleteMany", "updateMany"];
+        const isPrismaField = !isntPrismaFieldList.includes(operationName);
+
+        const getFields = (t: any) => {
+          const field = resolverObjectDefiner(t);
+          const handledField = opts?.handleResolver
+            ? opts.handleResolver({
+                field,
+                modelName: modelName as Model,
+                operationName,
+                resolverName,
+                t,
+                isPrismaField,
+                type,
+              })
+            : field;
+
+          return {
+            [resolverName]: isPrismaField
+              ? t.prismaField(handledField)
+              : t.field(handledField),
+          }
+        }
+
+        return type === "Query"
+          ? builder.queryFields((t) => getFields(t))
+          : builder.mutationFields((t) => getFields(t));
+      });
+    });
+}
+
+export function generateAllObjects(opts?: CrudOptions) {
+  return crudEntries
+    .filter(([md]) => includeModel(md, opts))
+    .map(([modelName, { Object }]) => {
+      return builder.prismaObject(modelName as Model, Object); // Objects is all imports
+    });
+}
+
+export function generateAllQueries(opts?: CrudOptions) {
+  generateResolversByType("Query", opts);
+}
+
+export function generateAllMutations(opts?: CrudOptions) {
+  generateResolversByType("Mutation", opts);
+}
+
+export function generateAllResolvers(opts?: CrudOptions) {
+  generateResolversByType("Mutation", opts);
+  generateResolversByType("Query", opts);
+}
+
+type CrudOptions = {
+  include?: Model[];
+  exclude?: Model[];
+  /**
+   * Caution: This is not type safe
+   * Wrap all queries/mutations to override args, run extra code in resolve function (ie: throw errors, logs), apply plugins, etc.
+   */
+  handleResolver?: (props: {
+    modelName: Model;
+    field: any;
+    operationName: string;
+    resolverName: string;
+    t: any;
+    isPrismaField: boolean;
+    type: ResolverType;
+  }) => any;
+};
+
+const includeModel = (model: string, opts?: CrudOptions): boolean => {
+  if (!opts) return true;
+  if (opts.include) return opts.include.includes(model as Model);
+  if (opts.exclude) return !opts.exclude.includes(model as Model);
+  return true;
+};
+
+export function generateAllCrud(opts?: CrudOptions) {
+  generateAllObjects(opts);
+  generateAllQueries(opts);
+  generateAllMutations(opts);
+}
+
+//// FILE: generated/objects.ts
+import { Prisma } from '.prisma/client';
+export {
+  UserObject,
+  UserIdFieldObject,
+  UserFirstNameFieldObject,
+  UserLastNameFieldObject,
+  UserPostsFieldObject,
+  UserCreatedAtFieldObject,
+  UserUpdatedAtFieldObject,
+  createManyUserMutation,
+  createOneUserMutation,
+  deleteManyUserMutation,
+  deleteOneUserMutation,
+  updateManyUserMutation,
+  updateOneUserMutation,
+  upsertOneUserMutation,
+  createManyUserMutationObject,
+  createOneUserMutationObject,
+  deleteManyUserMutationObject,
+  deleteOneUserMutationObject,
+  updateManyUserMutationObject,
+  updateOneUserMutationObject,
+  upsertOneUserMutationObject,
+  findFirstUserQuery,
+  findManyUserQuery,
+  countUserQuery,
+  findUniqueUserQuery,
+  findFirstUserQueryObject,
+  findManyUserQueryObject,
+  countUserQueryObject,
+  findUniqueUserQueryObject
+} from './User';
+export {
+  PostObject,
+  PostIdFieldObject,
+  PostTitleFieldObject,
+  PostContentFieldObject,
+  PostAuthorFieldObject,
+  PostAuthorIdFieldObject,
+  PostCreatedAtFieldObject,
+  PostUpdatedAtFieldObject,
+  createManyPostMutation,
+  createOnePostMutation,
+  deleteManyPostMutation,
+  deleteOnePostMutation,
+  updateManyPostMutation,
+  updateOnePostMutation,
+  upsertOnePostMutation,
+  createManyPostMutationObject,
+  createOnePostMutationObject,
+  deleteManyPostMutationObject,
+  deleteOnePostMutationObject,
+  updateManyPostMutationObject,
+  updateOnePostMutationObject,
+  upsertOnePostMutationObject,
+  findFirstPostQuery,
+  findManyPostQuery,
+  countPostQuery,
+  findUniquePostQuery,
+  findFirstPostQueryObject,
+  findManyPostQueryObject,
+  countPostQueryObject,
+  findUniquePostQueryObject
+} from './Post';
+import { builder } from '../builder';
+
+export const BatchPayload = builder.objectType(builder.objectRef<Prisma.BatchPayload>('BatchPayload'), {
+  description: 'Batch payloads from prisma.',
+  fields: (t) => ({
+    count: t.exposeInt('count', { description: 'Prisma Batch Payload', nullable: false }),
+  }),
+});
+
+export const modelNames = [
+  'User',
+  'Post',
+] as const;
+
+export type Model = typeof modelNames[number];
+
+//// FILE: generated/utils.ts
+import {
+  FieldOptionsFromKind,
+  InputFieldMap,
+  InterfaceParam,
+  MutationFieldBuilder,
+  MutationFieldsShape,
+  ObjectRef,
+  QueryFieldBuilder,
+  QueryFieldsShape,
+  TypeParam,
+} from '@pothos/core';
+import {
+  PrismaFieldOptions,
+  PrismaObjectTypeOptions,
+  RelatedFieldOptions,
+} from '@pothos/plugin-prisma';
+import { builder } from '../builder';
+
+type Types = typeof builder extends PothosSchemaTypes.SchemaBuilder<infer T> ? T : unknown;
+
+export const defineQuery = <Q extends QueryFieldsShape<Types>>(q: Q) => q;
+
+export const defineQueryFunction = <Obj>(
+  func: (t: QueryFieldBuilder<Types, Types['Root']>) => Obj,
+) => func;
+
+export const defineQueryObject = <
+  Type extends TypeParam<Types>,
+  Nullable extends boolean,
+  Args extends InputFieldMap,
+>(
+  obj: FieldOptionsFromKind<Types, Types['Root'], Type, Nullable, Args, 'Query', Types, unknown>,
+) => obj as { type: Type; nullable: Nullable; args: Args; resolve: typeof obj['resolve'] };
+
+export const defineQueryPrismaObject = <
+  Type extends keyof Types['PrismaTypes'] | [keyof Types['PrismaTypes']],
+  Model extends Types['PrismaTypes'][Type extends [unknown] ? Type[0] : Type],
+  Args extends InputFieldMap,
+  Nullable extends boolean,
+>(
+  def: PrismaFieldOptions<
+    Types,
+    Types['Root'],
+    Type,
+    Model,
+    Type extends [unknown] ? [ObjectRef<Types, Model['Shape']>] : ObjectRef<Types, Model['Shape']>,
+    Args,
+    Nullable,
+    unknown,
+    unknown,
+    'Query'
+  >,
+) => def as { type: Type; nullable: Nullable; args: Args; resolve: typeof def['resolve'] };
+
+export const defineMutation = <M extends MutationFieldsShape<Types>>(m: M) => m;
+
+export const defineMutationFunction = <Obj>(
+  func: (t: MutationFieldBuilder<Types, Types['Root']>) => Obj,
+) => func;
+
+export const defineMutationObject = <
+  Type extends TypeParam<Types>,
+  Nullable extends boolean,
+  Args extends InputFieldMap,
+>(
+  obj: FieldOptionsFromKind<Types, Types['Root'], Type, Nullable, Args, 'Mutation', Types, unknown>,
+) => obj as { type: Type; nullable: Nullable; args: Args; resolve: typeof obj['resolve'] };
+
+export const defineMutationPrismaObject = <
+  Type extends keyof Types['PrismaTypes'] | [keyof Types['PrismaTypes']],
+  Model extends Types['PrismaTypes'][Type extends [unknown] ? Type[0] : Type],
+  Args extends InputFieldMap,
+  Nullable extends boolean,
+>(
+  obj: PrismaFieldOptions<
+    Types,
+    Types['Root'],
+    Type,
+    Model,
+    Type extends [unknown] ? [ObjectRef<Types, Model['Shape']>] : ObjectRef<Types, Model['Shape']>,
+    Args,
+    Nullable,
+    unknown,
+    unknown,
+    'Mutation'
+  >,
+) => obj as { type: Type; nullable: Nullable; args: Args; resolve: typeof obj['resolve'] };
+
+export const defineFieldObject = <
+  Name extends keyof Types['PrismaTypes'],
+  Type extends TypeParam<Types>,
+  Nullable extends boolean,
+  Args extends InputFieldMap,
+>(
+  _: Name,
+  obj: FieldOptionsFromKind<
+    Types,
+    Types['PrismaTypes'][Name]['Shape'],
+    Type,
+    Nullable,
+    Args,
+    'Object',
+    unknown,
+    unknown
+  >,
+) =>
+  obj as { type: Type; nullable: Nullable; description?: string; resolve: typeof obj['resolve'] };
+
+export const defineRelationObject = <
+  ModelName extends keyof Types['PrismaTypes'],
+  RelationName extends keyof Types['PrismaTypes'][ModelName]['Relations'],
+  Nullable extends boolean,
+  Args extends InputFieldMap,
+>(
+  _: ModelName,
+  __: RelationName,
+  obj: RelatedFieldOptions<
+    Types,
+    Types['PrismaTypes'][ModelName],
+    RelationName,
+    Nullable,
+    Args,
+    unknown,
+    Types['PrismaTypes'][ModelName]['Shape']
+  >,
+) =>
+  obj as {
+    description: string | undefined;
+    nullable: Nullable;
+    args: Args;
+    query: typeof obj['query'];
+  };
+
+export const defineRelationFunction = <ModelName extends keyof Types['PrismaTypes'], O>(
+  _: ModelName,
+  func: (
+    t: PothosSchemaTypes.PrismaObjectFieldBuilder<
+      Types,
+      Types['PrismaTypes'][ModelName],
+      Types['PrismaTypes'][ModelName]['Shape']
+    >,
+  ) => O,
+) => func;
+
+export const definePrismaObject = <
+  Name extends keyof Types['PrismaTypes'],
+  Obj extends PrismaObjectTypeOptions<
+    Types,
+    Types['PrismaTypes'][Name],
+    InterfaceParam<Types>[],
+    unknown,
+    unknown,
+    Types['PrismaTypes'][Name]['Shape']
+  >,
+>(
+  _: Name,
+  obj: Obj,
+) => obj;

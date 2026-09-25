@@ -13,9 +13,15 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Windows too: the config file is loaded with `import()`, which needs a file URL there (BUG-09)
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
-    name: Build and test
+    runs-on: ${{ matrix.os }}
+
+    name: Build and test (${{ matrix.os }})
     steps:
       - name: 🛑 Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -36,3 +42,37 @@ jobs:
 
       - name: 🔎 Type check
         run: bun run tscheck
+
+      - name: 📦 Build (generator and runtime)
+        run: bun run build
+
+  examples:
+    runs-on: ubuntu-latest
+
+    name: Examples (generate, type check and test)
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🥟 Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+
+      - name: 📥 Install dependencies
+        run: bun install
+
+      - name: 📥 Install the dependencies of the examples
+        run: |
+          (cd examples/inputs-simple-sqlite && bun install)
+          (cd examples/secure-exposure && bun install)
+
+      - name: 🔬 Lint, test, generate the examples and check them
+        run: bun run fullcheck
+
+      - name: 🔬 The generated code compiles with TypeScript 5.4 and with looser compiler options
+        run: |
+          cd examples/secure-exposure
+          bun run tscheck:compat
+          bun run tscheck:ts54
+          bun run tscheck:variants

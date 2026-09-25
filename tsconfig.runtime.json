@@ -1,0 +1,12 @@
+{
+  // The runtime is used by the code the generator emits in your project: it must compile with a plain ES2019 lib
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2019"],
+    "target": "ES2019",
+    "composite": false,
+    "noEmit": true,
+    "types": []
+  },
+  "include": ["src/runtime"]
+}

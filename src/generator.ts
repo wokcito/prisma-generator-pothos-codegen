@@ -2,6 +2,8 @@ import { type GeneratorOptions, generatorHandler } from '@prisma/generator-helpe
 import { generateCrud } from './crudGenerator'
 import { generateInputs } from './inputsGenerator'
 import { getConfig } from './utils/config'
+import { normalizeExposure } from './utils/exposureConfig'
+import { getExposureReport } from './utils/manifest'
 
 // Types from the generator, in `schema.prisma`
 type SchemaGeneratorExtensionOptions = { generatorConfigPath?: string }
@@ -22,6 +24,8 @@ generatorHandler({
     config.global.beforeGenerate(options.dmmf)
     await generateCrud(config, options.dmmf)
     await generateInputs(config, options.dmmf)
+    const exposure = normalizeExposure(config.crud.exposure, options.dmmf)
+    if (exposure) for (const line of getExposureReport(exposure)) console.log(line)
     config.global.afterGenerate(options.dmmf)
   },
 })

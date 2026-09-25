@@ -1,6 +1,8 @@
 import type { DMMF } from '@prisma/generator-helper'
 import { env } from '../env'
 import type { ConfigInternal } from '../utils/config'
+import { normalizeExposure } from '../utils/exposureConfig'
+import { validateExposure } from '../utils/exposureValidation'
 import { writeFile } from '../utils/filesystem'
 import { getEnums, getImports, getInputs, getScalars, getUtil } from './utils/parts'
 
@@ -37,16 +39,19 @@ export type Scalars<DecimalType, JsonInput, JsonOutput> = {
 }
 
 export async function generateInputs(config: ConfigInternal, dmmf: DMMF.Document): Promise<void> {
+  validateExposure(config, dmmf)
+
   if (env.isTesting) await writeFile(config, 'debug.dmmf', JSON.stringify(dmmf, null, 2), 'dmmf.json')
 
   const fileLocation = config.inputs.outputFilePath
 
   const imports = getImports(config, fileLocation)
   const util = getUtil()
-  const scalars = getScalars(config, dmmf)
-  const enums = getEnums(dmmf)
-  const inputs = getInputs(config, dmmf)
-  const content = [imports, util, scalars, enums, inputs].join('\n\n')
+  const exposure = normalizeExposure(config.crud.exposure, dmmf)
+  const inputs = getInputs(config, dmmf, exposure)
+  const scalars = getScalars(config, dmmf, exposure ? inputs.used : undefined)
+  const enums = getEnums(dmmf, exposure, inputs.enums)
+  const content = [imports, util, scalars, enums, inputs.code].join('\n\n')
 
   await writeFile(config, 'inputs', content, fileLocation)
 }

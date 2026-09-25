@@ -1,14 +1,21 @@
 {
   "name": "@wokcito/prisma-generator-pothos-codegen",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "description": "A prisma generator that generate input types for Pothos. And optionally generate all crud.",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "module": "./src/index.js",
   "exports": {
-    "import": "./src/index.js",
-    "require": "./src/index.js"
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js"
+    },
+    "./runtime": {
+      "types": "./src/runtime/index.d.ts",
+      "default": "./src/runtime/index.js"
+    }
   },
   "repository": {
     "type": "git",
@@ -27,14 +34,14 @@
   "scripts": {
     "test": "vitest run",
     "build": "tsc -p tsconfig.build.json",
-    "tscheck": "tsc -noEmit",
+    "tscheck": "tsc -noEmit && tsc -p tsconfig.runtime.json",
     "prebuild": "bun run clean",
     "postbuild": "shx cp ./README.md ./dist && shx chmod +x ./dist/src/bin.js",
     "clean": "shx rm -rf dist",
     "pub": "cd dist && npm publish",
-    "format": "biome check --write ./src",
-    "lint": "biome check ./src",
-    "check-src-and-examples": "bun run lint && bun run test && bun run tscheck && cd examples/inputs-simple-sqlite && bun run generate && bun run tscheck",
+    "format": "biome check --write ./src ./test",
+    "lint": "biome check ./src ./test",
+    "check-src-and-examples": "bun run lint && bun run test && bun run tscheck && cd examples/inputs-simple-sqlite && bun run generate && bun run tscheck && cd ../secure-exposure && bun run generate && bun run tscheck && bun run test",
     "fullcheck": "bun run check-src-and-examples"
   },
   "bin": {

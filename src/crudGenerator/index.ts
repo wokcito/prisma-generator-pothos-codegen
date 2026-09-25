@@ -2,23 +2,32 @@ import path from 'node:path'
 import type { DMMF } from '@prisma/generator-helper'
 import type { ConfigInternal } from '../utils/config'
 import { getConfigCrudUnderscore } from '../utils/configUtils'
+import { normalizeExposure } from '../utils/exposureConfig'
+import { validateExposure } from '../utils/exposureValidation'
 import { deleteFolder, writeFile } from '../utils/filesystem'
+import { buildManifest, renderExposureFile, renderExposureTypes, renderManifest } from '../utils/manifest'
 import { useTemplate } from '../utils/template'
-import { autoCrudTemplate, objectsTemplate, utilsTemplate } from './templates/root'
+import { autoCrudTemplate, guardedRelationUtils, objectsTemplate, utilsTemplate } from './templates/root'
 import { generateModel } from './utils/generator'
 import { getBuilderCalculatedImport } from './utils/parts'
 
 export async function generateCrud(config: ConfigInternal, dmmf: DMMF.Document): Promise<void> {
+  validateExposure(config, dmmf) // also runs when crud is disabled: it governs the inputs too
+
   if (config.crud.disabled) return
+
+  const exposure = normalizeExposure(config.crud.exposure, dmmf)
 
   if (config.crud.deleteOutputDirBeforeGenerate) await deleteFolder(path.join(config.crud.outputDir))
 
-  const modelNames = dmmf.datamodel.models.map((model) => model.name)
+  // A model that has no operations and that no visible relation reaches is not generated at all
+  const emittedModels = dmmf.datamodel.models.filter((model) => !exposure || exposure.emittedModels.has(model.name))
+  const modelNames = emittedModels.map((model) => model.name)
 
   // Generate CRUD directories (e.g. User, Comment, ...)
   const generatedModels = await Promise.all(
     modelNames.map(async (model) => {
-      const generated = await generateModel(config, dmmf, model)
+      const generated = await generateModel(config, dmmf, model, exposure)
       return { model, generated }
     }),
   )
@@ -51,6 +60,7 @@ export async function generateCrud(config: ConfigInternal, dmmf: DMMF.Document):
       ...config.crud,
       modelNames: modelNamesEachLine,
       builderCalculatedImport: builderCalculatedImportObjects,
+      exposureImport: exposure ? "\nimport './exposure';" : '',
     }),
     fileLocationObjects,
   )
@@ -64,20 +74,45 @@ export async function generateCrud(config: ConfigInternal, dmmf: DMMF.Document):
     'crud.utils',
     useTemplate(utilsTemplate, {
       builderCalculatedImport,
+      // Only what a guarded to-one relation needs, and only with `crud.exposure`
+      fieldRefImport: exposure ? '  FieldRef,\n' : '',
+      exposureUtils: exposure ? guardedRelationUtils : '',
     }),
     fileLocation,
   )
 
+  if (exposure) {
+    const manifest = buildManifest(config, exposure, dmmf)
+    await writeFile(
+      config,
+      'crud.exposure',
+      renderExposureFile(manifest),
+      path.join(config.crud.outputDir, 'exposure.ts'),
+    )
+    await writeFile(
+      config,
+      'crud.exposure.types',
+      renderExposureTypes(dmmf),
+      path.join(config.crud.outputDir, 'exposure.types.ts'),
+    )
+    await writeFile(
+      config,
+      'crud.exposure.manifest',
+      renderManifest(manifest),
+      exposure.manifestPath ?? path.join(config.crud.outputDir, 'exposure.manifest.json'),
+    )
+  }
+
   // Generate root autocrud.ts file
   // TODO REFACTOR AND TESTS
   if (config.crud.generateAutocrud) {
-    const imports = dmmf.datamodel.models.map((model) => `import * as ${model.name} from './${model.name}';`).join('\n')
+    const imports = emittedModels.map((model) => `import * as ${model.name} from './${model.name}';`).join('\n')
     const models = generatedModels.map((el) => ({
       model: el.model,
       generated: el.generated.resolvers,
     }))
 
-    const modelsGenerated = dmmf.datamodel.models
+    const modelsGenerated = emittedModels
       .map((model) => {
         const { name } = model
         return `  ${name}: {
@@ -109,6 +144,7 @@ export async function generateCrud(config: ConfigInternal, dmmf: DMMF.Document):
         imports,
         modelsGenerated,
         builderCalculatedImport,
+        exposureImport: exposure ? "\nimport './exposure';" : '',
       }),
       fileLocation,
     )

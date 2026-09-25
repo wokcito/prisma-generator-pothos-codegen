@@ -1,11 +1,11 @@
 // TODO only import what is necessary
-export const objectTemplate = `#{inputsImporter}#{builderCalculatedImport}
+export const objectTemplate = `#{inputsImporter}#{resolverImports}#{builderCalculatedImport}#{runtimeImports}
 import {
   definePrismaObject,
   defineFieldObject,
   defineRelationFunction,
   defineRelationObject,
-} from '../utils';
+#{guardedUtils}} from '../utils';
 
 export const #{modelName}#{optionalUnderscore}Object = definePrismaObject('#{modelName}', {
   description: #{description},
@@ -25,7 +25,30 @@ export const fieldObjectTemplate = `export const #{modelName}#{optionalUnderscor
   resolve: (parent) => #{conditionalResolve},
 });`
 
-export const listRelationObjectTemplate = `export const #{modelName}#{optionalUnderscore}#{nameUpper}#{optionalUnderscore}FieldArgs = builder.args((t) => ({
+/** `guarded` scalar: always nullable, it is only returned when the runtime says the row allows it */
+export const guardedFieldObjectTemplate = `export const #{modelName}#{optionalUnderscore}#{nameUpper}#{optionalUnderscore}FieldObject = defineFieldObject('#{modelName}', {
+  type: #{conditionalType},
+  description: #{description},
+  nullable: true,
+  resolve: (parent, _args, ctx) => (canReadField({ model: '#{modelName}', field: '#{name}' }, parent, ctx) ? #{conditionalResolve} : null),
+});`
+
+/**
+ * `guarded` to-one relation. Prisma does not accept a `where` on it, so the row is loaded with its parent and checked
+ * afterwards against the scope of its model: the relation is nullable and is null for the rows that scope hides
+ */
+export const guardedRelationObjectTemplate = `export const #{modelName}#{optionalUnderscore}#{nameUpper}#{optionalUnderscore}FieldObject = defineGuardedRelationObject('#{modelName}', '#{name}', '#{type}', {
+  description: #{description},
+  isReadable: (row, _context) =>
+    isRowReadable(
+      { kind: 'relation', model: '#{modelName}', field: '#{name}', targetModel: '#{type}', isList: false },
+      row,
+      _context,
+      { key: '#{targetKey}', find: (where) => #{prisma}.#{targetModelLower}.findMany({ where, select: { #{targetKey}: true } }) },
+    ),
+});`
+
+export const listRelationObjectTemplate = `#{prelude}export const #{modelName}#{optionalUnderscore}#{nameUpper}#{optionalUnderscore}FieldArgs = builder.args((t) => ({
   where: t.field({ type: Inputs.#{type}WhereInput, required: false }),
   orderBy: t.field({ type: [Inputs.#{type}OrderByWithRelationInput], required: false }),
   cursor: t.field({ type: Inputs.#{type}WhereUniqueInput, required: false }),
@@ -39,14 +62,7 @@ export const #{modelName}#{optionalUnderscore}#{nameUpper}#{optionalUnderscore}F
     description: #{description},
     nullable: #{nullable},
     args: #{modelName}#{optionalUnderscore}#{nameUpper}#{optionalUnderscore}FieldArgs,
-    query: (args) => ({
-      where: args.where || undefined,
-      cursor: args.cursor || undefined,
-      take: args.take || undefined,
-      distinct: args.distinct || undefined,
-      skip: args.skip || undefined,
-      orderBy: args.orderBy || undefined,
-    }),
+    query: #{query},
   }),
 );`
 

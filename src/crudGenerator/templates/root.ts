@@ -1,4 +1,4 @@
-export const objectsTemplate = `#{prismaImporter}#{crudExportRoot}#{builderCalculatedImport}
+export const objectsTemplate = `#{prismaImporter}#{crudExportRoot}#{builderCalculatedImport}#{exposureImport}
 
 export const BatchPayload = builder.objectType(builder.objectRef<Prisma.BatchPayload>('BatchPayload'), {
   description: 'Batch payloads from prisma.',
@@ -16,7 +16,7 @@ export type Model = typeof modelNames[number];
 
 export const utilsTemplate = `import {
   FieldOptionsFromKind,
-  InputFieldMap,
+#{fieldRefImport}  InputFieldMap,
   InterfaceParam,
   MutationFieldBuilder,
   MutationFieldsShape,
@@ -171,6 +171,56 @@ export const definePrismaObject = <
   _: Name,
   obj: Obj,
 ) => obj;
+#{exposureUtils}`
+
+/**
+ * Helper of the guarded to-one relations (only with crud.exposure). The relation is loaded with its parent, through
+ * `select` (so the fields the client asks for are preloaded, without a query per parent), and it is returned only when
+ * `isReadable` says the row is visible: otherwise it is `null`.
+ */
+export const guardedRelationUtils = `
+type RelationShape<Model, Relation> = Model extends { Relations: infer R }
+  ? Relation extends keyof R
+    ? R[Relation] extends { Shape: infer S }
+      ? S
+      : never
+    : never
+  : never;
+
+export const defineGuardedRelationObject = <
+  ModelName extends keyof Types['PrismaTypes'],
+  RelationName extends keyof Types['PrismaTypes'][ModelName]['Relations'] & string,
+>(
+  _: ModelName,
+  relation: RelationName,
+  targetModel: string,
+  obj: {
+    description: string | undefined;
+    isReadable: (
+      row: RelationShape<Types['PrismaTypes'][ModelName], RelationName>,
+      ctx: Types['Context'],
+    ) => boolean | Promise<boolean>;
+  },
+) =>
+  (
+    t: PothosSchemaTypes.PrismaObjectFieldBuilder<
+      Types,
+      Types['PrismaTypes'][ModelName],
+      Types['PrismaTypes'][ModelName]['Shape']
+    >,
+  ) =>
+    (t as any).field({
+      type: targetModel,
+      description: obj.description,
+      nullable: true,
+      select: (_args: unknown, _ctx: unknown, nestedQuery: (query: object) => unknown) => ({
+        [relation]: nestedQuery({}),
+      }),
+      resolve: async (parent: any, _args: unknown, ctx: any) => {
+        const row = parent[relation];
+        return row != null && (await obj.isReadable(row, ctx)) ? row : null;
+      },
+    }) as FieldRef<Types, RelationShape<Types['PrismaTypes'][ModelName], RelationName> | null, 'Object'>;
 `
 
 // TODO: Refactor getParams to link model with object base, and remove any
@@ -191,7 +241,7 @@ export const definePrismaObject = <
     },
   },
  */
-export const autoCrudTemplate = `#{imports}#{builderCalculatedImport}
+export const autoCrudTemplate = `#{imports}#{builderCalculatedImport}#{exposureImport}
 import * as Objects from './objects';
 
 type Model = Objects.Model;

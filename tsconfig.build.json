@@ -11,7 +11,7 @@
     "dist",
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
-    "src/**/tests/**/*.ts",
+    "test",
     "src/contract/fixtures/**/prisma.config.ts",
     "src/contract/fixtures/**/generated"
   ]

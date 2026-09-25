@@ -1,0 +1,108 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./client"
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+model User {
+  id           Int         @id @default(autoincrement())
+  email        String      @unique
+  passwordHash String
+  phone        String?
+  role         Role        @default(MEMBER)
+  /// Not a secret: number of tokens the user owns
+  tokenCount   Int         @default(0)
+  /// @Pothos.omit()
+  internalNote String?
+  /// A model field named like a nested operation input key
+  data         Json?
+  /// @Pothos.omit(create, update)
+  createdAt    DateTime    @default(now())
+  posts        Post[]
+  tokens       AuthToken[]
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String
+  published Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  author    User      @relation(fields: [authorId], references: [id])
+  authorId  Int
+  comments  Comment[]
+  bridges   Bridge[]
+}
+
+model Comment {
+  id     Int    @id @default(autoincrement())
+  body   String
+  post   Post   @relation(fields: [postId], references: [id])
+  postId Int
+}
+
+model AuthToken {
+  id     Int    @id @default(autoincrement())
+  token  String
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
+
+  @@unique([userId, token])
+}
+
+model AppClientAuth {
+  id       Int    @id @default(autoincrement())
+  clientId String @unique
+  secret   String
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  action    String
+  createdAt DateTime @default(now())
+}
+
+/// Composite primary key
+model Pair {
+  a     Int
+  b     Int
+  label String
+
+  @@id([a, b])
+}
+
+/// Every scalar type that needs a custom GraphQL scalar, and an enum
+model Typed {
+  id    Int      @id @default(autoincrement())
+  big   BigInt
+  price Decimal
+  blob  Bytes
+  meta  Json
+  when  DateTime
+  kind  Role
+}
+
+/// Only relations besides its id: implicit many-to-many
+model Bridge {
+  id    Int    @id @default(autoincrement())
+  posts Post[]
+}
+
+/// Every `@Pothos.omit` variant
+model Omitted {
+  id Int     @id @default(autoincrement())
+  /// @Pothos.omit()
+  a  String?
+  /// @Pothos.omit(create)
+  b  String?
+  /// @Pothos.omit(orderBy, where, update)
+  c  String?
+}

@@ -1,7 +1,56 @@
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 import type { DMMF } from '@prisma/generator-helper'
 import type { ExtendedGeneratorOptions } from '../generator'
 import type { Replacer } from './replacer'
+
+/** Resolver operations that `crud.exposure.operations` can enable */
+export type ExposureOperation =
+  | 'findMany'
+  | 'findUnique'
+  | 'findFirst'
+  | 'count'
+  | 'createOne'
+  | 'createMany'
+  | 'updateOne'
+  | 'updateMany'
+  | 'upsertOne'
+  | 'deleteOne'
+  | 'deleteMany'
+
+/** What a field is allowed to do. A field without state is visible, writable and filterable, as in 1.0.0 */
+export type ExposureState = 'unfilterable' | 'readonly' | 'guarded' | 'hidden'
+
+/**
+ * Enabled operations. A list enables them without tags; an object gives each one a tag (or several) that the
+ * application resolves at runtime; `false` (or omitting it) leaves it out. In a model, `inherit: true` starts from the
+ * global `operations` instead of from nothing.
+ */
+export type ExposureOperations =
+  | ExposureOperation[]
+  | ({ inherit?: boolean } & Partial<Record<ExposureOperation, boolean | string | string[]>>)
+
+export type ExposureModel = {
+  /** State (or states) of the scalar fields and relations of the model. Ie: `{ passwordHash: 'hidden', email: 'guarded' }` */
+  fields?: Record<string, ExposureState | ExposureState[]>
+  /** Operations of this model. Replaces the global ones unless it has `inherit: true` */
+  operations?: ExposureOperations
+  /** Maximum `take` of `findMany` and of the list relations that return rows of this model. Overrides the global one */
+  maxTake?: number
+}
+
+/** Access exposure of the generated schema. Every key is optional: what is not mentioned does not change */
+export type ExposureConfig = {
+  /** Operations of every model, unless the model overrides them. Default: all of them */
+  operations?: ExposureOperations
+  /** Maximum `take` of `findMany` and of list relations, unless the model overrides it. Default: not limited */
+  maxTake?: number
+  /** Where the manifest is written. Default: `<crud.outputDir>/exposure.manifest.json` */
+  manifest?: { path: string }
+  /** Names (of inputs and enums) to keep in `inputs.ts` although no generated operation reaches them, for your own resolvers */
+  keepInputs?: string[]
+  models?: Record<string, ExposureModel>
+}
 
 /** Interface used to configure generator behavior */
 export interface Config {
@@ -40,13 +89,25 @@ export interface Config {
     replacer?: Replacer<'crud'>
     /** A boolean to enable/disable generation of `autocrud.ts` which can be imported in schema root to auto generate all crud objects, queries and mutations. Default: `true` */
     generateAutocrud?: boolean
-    /** An array of parts of resolver names to be excluded from generation. Ie: ["User"] Default: [] */
+    /**
+     * An array of parts of resolver names to be excluded from generation. Ie: ["User"] Default: []
+     * @deprecated Use `crud.exposure.operations` (and `models`), which decides the operations of each model. Still works when `exposure.operations` is not used; using both is an error.
+     */
     excludeResolversContain?: string[]
-    /** An array of resolver names to be excluded from generation. Ie: ["upsertOneComment"] Default: [] */
+    /**
+     * An array of resolver names to be excluded from generation. Ie: ["upsertOneComment"] Default: []
+     * @deprecated Use `crud.exposure.operations` (and `models`), which decides the operations of each model. Still works when `exposure.operations` is not used; using both is an error.
+     */
     excludeResolversExact?: string[]
-    /** An array of parts of resolver names to be included from generation (to bypass exclude contain). Ie: if exclude ["User"], include ["UserReputation"] Default: [] */
+    /**
+     * An array of parts of resolver names to be included from generation (to bypass exclude contain). Ie: if exclude ["User"], include ["UserReputation"] Default: []
+     * @deprecated Use `crud.exposure.operations` (and `models`), which decides the operations of each model. Still works when `exposure.operations` is not used; using both is an error.
+     */
     includeResolversContain?: string[]
-    /** An array of resolver names to be included from generation (to bypass exclude contain). Ie: if exclude ["User"], include ["UserReputation"] Default: [] */
+    /**
+     * An array of resolver names to be included from generation (to bypass exclude contain). Ie: if exclude ["User"], include ["UserReputation"] Default: []
+     * @deprecated Use `crud.exposure.operations` (and `models`), which decides the operations of each model. Still works when `exposure.operations` is not used; using both is an error.
+     */
     includeResolversExact?: string[]
     /** Caution: This delete the whole folder (Only use if the folder only has auto generated contents). A boolean to delete output dir before generate. Default: False */
     deleteOutputDirBeforeGenerate?: boolean
@@ -56,6 +117,8 @@ export interface Config {
     mapIdFieldsToGraphqlId?: false | 'Objects'
     /** Change the generated variables from object.base.ts from something like `UserName` to `User_Name`. This avoids generated duplicated names in some cases. See [issue #58](https://github.com/Cauen/prisma-generator-pothos-codegen/issues/58). Default: False */
     underscoreBetweenObjectVariableNames?: false | 'Objects'
+    /** Restrict what the generated schema exposes: operations, field states and `take`. Default: not set (everything is generated, as in 1.0.0) */
+    exposure?: ExposureConfig
   }
   /** Global config */
   global?: {
@@ -73,7 +136,8 @@ export interface Config {
 /** Type representing a configuration filled with default values where the original config was missing them, for internal purposes */
 export type ConfigInternal = {
   inputs: NonNullable<Required<Config['inputs']>>
-  crud: NonNullable<Required<Config['crud']>>
+  /** `exposure` has no default: when absent the generated code is the same as in 1.0.0 */
+  crud: Required<Omit<NonNullable<Config['crud']>, 'exposure'>> & Pick<NonNullable<Config['crud']>, 'exposure'>
   global: NonNullable<Required<Config['global']>>
 }
 
@@ -96,10 +160,28 @@ export const getConfigPath = ({
   return optionsPath
 }
 
+/**
+ * `import()` needs a URL for absolute paths: on Windows `C:\\...` is read as a `c:` protocol
+ * (`ERR_UNSUPPORTED_ESM_URL_SCHEME`). A relative specifier is left as is. `windows` is only for tests, by default the
+ * platform decides.
+ */
+export const getImportSpecifier = (configPath: string, windows?: boolean): string => {
+  const isAbsolute =
+    windows === undefined
+      ? path.isAbsolute(configPath)
+      : windows
+        ? path.win32.isAbsolute(configPath)
+        : path.posix.isAbsolute(configPath)
+  return isAbsolute ? pathToFileURL(configPath, { windows }).href : configPath
+}
+
 /** Parses the configuration file based on the provided schema and config paths */
 export const parseConfig = async (configPath: string): Promise<Config> => {
-  const importedFile = await import(configPath) // throw error if dont exist
-  const { crud, global, inputs }: Config = importedFile || {}
+  const importedFile = await import(getImportSpecifier(configPath)) // throw error if dont exist
+  // A CommonJS file (`module.exports = { crud: { ... } }`) imported from ESM only exposes its named exports when Node
+  // can detect them statically, which it can't for object literals: read them from the `default` export (module.exports)
+  const source = importedFile?.default && typeof importedFile.default === 'object' ? importedFile.default : undefined
+  const { crud, global, inputs }: Config = { ...importedFile, ...source }
 
   return { crud, global, inputs }
 }

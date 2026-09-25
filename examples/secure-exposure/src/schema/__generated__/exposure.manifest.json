@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "generator": "1.1.0",
+  "models": {
+    "User": {
+      "maxTake": 50,
+      "operations": {
+        "findMany": [
+          "loggedIn",
+          "canRead"
+        ],
+        "findUnique": [
+          "loggedIn",
+          "canRead"
+        ]
+      },
+      "fields": {
+        "id": {
+          "kind": "scalar",
+          "type": "Int",
+          "states": []
+        },
+        "email": {
+          "kind": "scalar",
+          "type": "String",
+          "states": [
+            "guarded"
+          ]
+        },
+        "passwordHash": {
+          "kind": "scalar",
+          "type": "String",
+          "states": [
+            "hidden"
+          ]
+        },
+        "phone": {
+          "kind": "scalar",
+          "type": "String",
+          "states": [
+            "unfilterable",
+            "guarded"
+          ]
+        },
+        "role": {
+          "kind": "scalar",
+          "type": "String",
+          "states": [
+            "readonly"
+          ]
+        },
+        "createdAt": {
+          "kind": "scalar",
+          "type": "DateTime",
+          "states": []
+        },
+        "posts": {
+          "kind": "relation",
+          "targetModel": "Post",
+          "isList": true,
+          "fromFields": [],
+          "states": []
+        },
+        "tokens": {
+          "kind": "relation",
+          "targetModel": "AuthToken",
+          "isList": true,
+          "fromFields": [],
+          "states": [
+            "hidden"
+          ]
+        }
+      }
+    },
+    "Post": {
+      "maxTake": 50,
+      "operations": {
+        "findMany": [
+          "canRead"
+        ],
+        "findUnique": [
+          "canRead"
+        ],
+        "count": [
+          "canRead"
+        ]
+      },
+      "fields": {
+        "id": {
+          "kind": "scalar",
+          "type": "Int",
+          "states": []
+        },
+        "title": {
+          "kind": "scalar",
+          "type": "String",
+          "states": []
+        },
+        "published": {
+          "kind": "scalar",
+          "type": "Boolean",
+          "states": [
+            "readonly"
+          ]
+        },
+        "createdAt": {
+          "kind": "scalar",
+          "type": "DateTime",
+          "states": []
+        },
+        "author": {
+          "kind": "relation",
+          "targetModel": "User",
+          "isList": false,
+          "fromFields": [
+            "authorId"
+          ],
+          "states": [
+            "guarded"
+          ]
+        },
+        "authorId": {
+          "kind": "scalar",
+          "type": "Int",
+          "states": []
+        },
+        "comments": {
+          "kind": "relation",
+          "targetModel": "Comment",
+          "isList": true,
+          "fromFields": [],
+          "states": [
+            "hidden"
+          ]
+        }
+      }
+    }
+  }
+}

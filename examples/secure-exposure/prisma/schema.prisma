@@ -1,0 +1,65 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+generator pothos {
+  provider          = "prisma-pothos-types"
+  clientOutput      = "../generated/prisma"
+  output            = "../src/generated/objects.ts"
+  generateDatamodel = "true"
+}
+
+generator pothosCrud {
+  provider            = "tsx ../../src/generator.ts"
+  generatorConfigPath = "../src/schema/configs.js"
+}
+
+// Everything that must not be exposed is declared in `src/schema/configs.js` (`crud.exposure`),
+// not with `@Pothos.omit()` comments in this file.
+
+model User {
+  id           Int         @id @default(autoincrement())
+  email        String      @unique
+  passwordHash String
+  phone        String?
+  role         String      @default("member")
+  createdAt    DateTime    @default(now())
+  posts        Post[]
+  tokens       AuthToken[]
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String
+  published Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  author    User      @relation(fields: [authorId], references: [id])
+  authorId  Int
+  comments  Comment[]
+}
+
+model Comment {
+  id     Int    @id @default(autoincrement())
+  body   String
+  post   Post   @relation(fields: [postId], references: [id])
+  postId Int
+}
+
+model AuthToken {
+  id     Int    @id @default(autoincrement())
+  token  String
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
+
+  @@unique([userId, token])
+}
+
+model AuditLog {
+  id     Int    @id @default(autoincrement())
+  action String
+}

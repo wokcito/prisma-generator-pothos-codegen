@@ -2,6 +2,8 @@ import path from 'node:path'
 import type { DMMF } from '@prisma/generator-helper'
 import type { ConfigInternal } from '../../utils/config'
 import { getConfigCrudUnderscore } from '../../utils/configUtils'
+import { isHidden } from '../../utils/exposure'
+import type { NormalizedExposure, Operation } from '../../utils/exposureConfig'
 import { writeFile } from '../../utils/filesystem'
 import {
   escapeQuotesAndMultilineSupport,
@@ -11,6 +13,7 @@ import {
 } from '../../utils/string'
 import { useTemplate } from '../../utils/template'
 import { objectTemplate } from '../templates/object'
+import { getResolverVariables, runtimeImport } from './exposure'
 import { getObjectFieldsString } from './objectFields'
 
 type ResolverType = 'queries' | 'mutations'
@@ -30,6 +33,7 @@ export async function writeIndex(
   config: ConfigInternal,
   model: DMMF.Model,
   { queries, mutations }: { queries: GeneratedResolver[]; mutations: GeneratedResolver[] },
+  exposure?: NormalizedExposure,
 ) {
   const queriesExports = queries.map((el) => `${el.resolverName}${el.modelName}${getResolverTypeName(el.type)}`)
   const mutationsExports = mutations.map((el) => `${el.resolverName}${el.modelName}${getResolverTypeName(el.type)}`)
@@ -40,9 +44,12 @@ export async function writeIndex(
       name: './object.base',
       exports: [
         `${model.name}${optionalUnderscore}Object`,
-        ...model.fields.map(
-          (el) => `${model.name}${optionalUnderscore}${firstLetterUpperCase(el.name)}${optionalUnderscore}FieldObject`,
-        ),
+        ...model.fields
+          .filter((el) => !isHidden(exposure, model.name, el.name))
+          .map(
+            (el) =>
+              `${model.name}${optionalUnderscore}${firstLetterUpperCase(el.name)}${optionalUnderscore}FieldObject`,
+          ),
       ],
     },
     {
@@ -66,7 +73,12 @@ export async function writeIndex(
 }
 
 /** Write object.base.ts */
-export async function writeObject(config: ConfigInternal, model: DMMF.Model): Promise<void> {
+export async function writeObject(
+  config: ConfigInternal,
+  model: DMMF.Model,
+  exposure?: NormalizedExposure,
+  models: readonly DMMF.Model[] = [],
+): Promise<void> {
   // findUnique
   const idField = model.fields.find((f) => f.isId)
   let findUnique = `(fields) => ({ ...fields })`
@@ -75,7 +87,13 @@ export async function writeObject(config: ConfigInternal, model: DMMF.Model): Pr
     findUnique = `(fields) => ({ ${model.primaryKey.name || getCompositeName(model.primaryKey.fields)}: fields })`
 
   // Fields
-  const { fields, exportFields } = getObjectFieldsString(model.name, model.fields, config)
+  const { fields, exportFields, runtimeNames, guardedRelations } = getObjectFieldsString(
+    model.name,
+    model.fields,
+    config,
+    exposure,
+    models,
+  )
 
   const fileLocation = path.join(config.crud.outputDir, model.name, 'object.base.ts')
   const builderCalculatedImport = getBuilderCalculatedImport({ config, fileLocation })
@@ -89,6 +107,10 @@ export async function writeObject(config: ConfigInternal, model: DMMF.Model): Pr
       description: escapeQuotesAndMultilineSupport(model.documentation) || 'undefined', // Object description defined in schema.prisma
       findUnique,
       inputsImporter: config.crud.inputsImporter,
+      // The Prisma client is only called from this file by guarded to-one relations, which may need the resolver imports
+      resolverImports: guardedRelations ? config.crud.resolverImports : '',
+      runtimeImports: runtimeNames.length ? runtimeImport(runtimeNames, '../exposure') : '',
+      guardedUtils: guardedRelations ? '  defineGuardedRelationObject,\n' : '',
       fields: fields.join('\n    '),
       exportFields: exportFields.join('\n\n'),
       builderCalculatedImport,
@@ -98,7 +120,18 @@ export async function writeObject(config: ConfigInternal, model: DMMF.Model): Pr
   )
 }
 
-const isExcludedResolver = (options: ConfigInternal, name: string) => {
+/** Whether `<operation><Model>` is generated: by `crud.exposure.operations` when it is used, else by `excludeResolvers*` / `includeResolvers*` */
+export const isOperationEnabled = (
+  config: ConfigInternal,
+  exposure: NormalizedExposure | undefined,
+  modelName: string,
+  operation: Operation,
+): boolean => {
+  if (exposure?.usesOperations) return exposure.models[modelName]?.operations[operation] !== undefined
+  return !isExcludedResolver(config, `${operation}${modelName}`)
+}
+
+export const isExcludedResolver = (options: ConfigInternal, name: string) => {
   const { excludeResolversContain, excludeResolversExact, includeResolversContain, includeResolversExact } =
     options.crud || {}
   if (includeResolversExact.length) {
@@ -138,13 +171,16 @@ export async function writeResolvers(
   model: DMMF.Model,
   type: ResolverType,
   templates: Record<string, string>,
+  exposure?: NormalizedExposure,
 ): Promise<GeneratedResolver[]> {
   const { inputsImporter } = config.crud
   const resolverInputsImporter = inputsImporter.includes('../')
     ? inputsImporter.replace('../', '../../') // go a level inside to import
     : inputsImporter
 
-  const resolvers = Object.entries(templates).filter(([name]) => !isExcludedResolver(config, `${name}${model.name}`))
+  const resolvers = Object.entries(templates).filter(([name]) =>
+    isOperationEnabled(config, exposure, model.name, name as Operation),
+  )
 
   // Generate files
   await Promise.all(
@@ -163,6 +199,7 @@ export async function writeResolvers(
           resolverImports: config.crud.resolverImports,
           inputsImporter: resolverInputsImporter,
           builderCalculatedImport,
+          ...getResolverVariables(exposure, model.name, name as Operation, type === 'queries' ? 'query' : 'mutation'),
         }),
         fileLocation,
       )

@@ -1,5 +1,39 @@
 # Changelog
 
+# 1.1.0
+
+Secure exposure. An earlier draft (`exposure.neverExposed`, `relations`, `allowToOne`, `restricted`, `hooks`, `maxTake`) was never published; it was replaced by the simpler API below and a runtime. Every option is optional: **without `crud.exposure` the generated code is byte-identical to 1.0.0** (covered by golden files generated with 1.0.0: no new imports, no new files).
+
+- [x] Feature: `crud.exposure.models.<Model>.fields` with the states `hidden`, `guarded`, `readonly` and `unfilterable` (a state or an array of states). `hidden` removes a field from the object and from every input and enum, including the nested `XCreateWithoutYInput`/`XUpdateWithoutYInput`, and drops compound uniques that contain it. `readonly` on a relation also closes its foreign keys in the write inputs (no mass assignment through `authorId`). `guarded` scalars are nullable and ask the runtime; `guarded` to-one relations are nullable and `null` when the target row is not readable.
+- [x] Feature: `crud.exposure.operations` (global) and `models.<Model>.operations` (override, or `inherit: true`): which operations exist, each with optional tags that the application resolves at runtime. It replaces `excludeResolvers*`/`includeResolvers*`, which are now **deprecated** (using both is an error; without it those options work as in 1.0.0; they will be removed in a future major version). Only what is listed is generated: with `operations`, a model not in `models` has no operations, and a model with no operations that no visible relation reaches is not generated at all (no object, inputs, autocrud entry or manifest entry).
+- [x] Feature: `crud.exposure.maxTake` (global) and `models.<Model>.maxTake` for `findMany` and list relations, with `clampTake` (keeps the sign).
+- [x] Feature: new package `@wokcito/prisma-generator-pothos-codegen/runtime` (no dependencies): `configureExposure`, `byTag`, `withExposure`, `mergeScope`, `clampTake`, `canReadField`, `isRowReadable`, `assertExposureConfigured`. Hooks: `guards`, `scope`, `fieldAccess`, `fieldScope`. The generated code never names an authorization library.
+- [x] Feature: `mergeScope` rewrites the client `where` so a row that scope hides behaves as if it did not exist (`some`/`none`/`every`/`is`/`isNot`, nested, inside `AND`/`OR`/`NOT`), adds the `fieldScope` of guarded fields used in `where`, `orderBy`, `cursor` and `distinct`, and rejects ordering through a restricted relation. `findUnique`/`updateOne`/`deleteOne` keep the unique key on top.
+- [x] Feature: with `exposure` the generator also writes `exposure.ts` (registers the manifest), `exposure.types.ts` (`ExposureConfig` with your models and fields) and `exposure.manifest.json` (deterministic). It prints the models that use the default exposure.
+- [x] Feature: inputs are pruned to what the enabled operations and the objects reach (`exposure.keepInputs` keeps others for your own resolvers). Scalars and `NEVER` are recalculated over what is emitted.
+- [x] Feature: the configuration is validated at generation time, all the errors together, with the path and the valid values, unknown keys with "did you mean".
+- [x] Fix: hiding the only editable column of a model left `NEVER` used but not defined (`builder.toSchema()` failed with `NEVER is not defined`; `inputs.ts` has `@ts-nocheck`, so `tsc` did not see it).
+- [x] Fix: `maxTake` made `findFirst` fail (Prisma only accepts `take` 1 or -1 there) and a negative `take` skipped the cap.
+- [x] Fix: the config file was not loaded on Windows: `import()` needs a file URL for an absolute path.
+- [x] Fix: keys that do not exist in `exposure` were ignored.
+- [x] Fix (**behavior change**): a config file written as `module.exports = { crud: { ... } }` was silently ignored when the generator ran through Node's ESM loader (`tsx`), because the keys were only read from named exports. They are now also read from the `default` export, so **a configuration that used to be ignored is now applied**. Configs loaded as compiled CommonJS (the published package) were not affected.
+- [x] Fix: `useTemplate` inserts values literally, so generated code containing `$&`, `$'` or `$$` is no longer mangled.
+- [x] Docs: "Secure exposure", the runtime contract, the migration from the pre-release API and `spikes.md`. `examples/secure-exposure` runs against a real sqlite database.
+
+Requirements: the runtime and the emitted code need `lib` ES2019 (`Array.prototype.flat`); the emitted code compiles with TypeScript 5.4.
+
+Behaviors worth knowing (found by testing against Prisma 7, see `spikes.md`):
+
+- `{ OR: [] }` as an element of an `AND` is ignored by Prisma (it does not mean "no rows" there), so the runtime never emits it: it replaces it with a condition on a real column that is false everywhere.
+- Prisma does not accept a `where` on a to-one relation: a `guarded` to-one relation is loaded with its parent and checked afterwards, one query per level.
+
+## Known limitations
+
+- `createOne`/`createMany` can not impose values from the context (write them by hand); `upsertOne` can not be scoped by row.
+- A guarded to-one relation needs the target to have a single-field `@id`, and costs one extra query per level.
+- Replacing `resolve` of a generated operation drops the wrapper (guards and scope): call `withExposure` again.
+
+
 # Unreleased
 
 - [x] Upgrade: Support Prisma ORM 7 (tested against 7.10.0). peerDependencies for `prisma`/`@prisma/client` now require `^7.10.0`. The `@prisma/internals` test helper switched from the removed `getSchema`/`getDMMF` pair to reading `.prisma` fixtures directly and `getDMMF` from `@prisma/internals`. `dmmf.schema.inputObjectTypes.prisma` is now optional in Prisma's DMMF types, handled with a fallback. The generated `Bytes` scalar's `Input` mapping now accepts `Uint8Array` (Prisma 6+ represents `Bytes` fields as `Uint8Array` instead of `Buffer`).

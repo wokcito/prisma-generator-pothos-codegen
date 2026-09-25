@@ -39,14 +39,14 @@ const createOne = makeMutation('createOne', "'#{modelName}'", 'false', createOne
 const deleteManyArgs = '{ where: t.field({ type: Inputs.#{modelName}WhereInput, required: true }) }'
 
 const deleteManyResolver = `async (_root, args, _context, _info) =>
-      await #{prisma}.#{modelNameLower}.deleteMany({ where: args.where })`
+      await #{prisma}.#{modelNameLower}.deleteMany({ where: #{where} })`
 
 const deleteMany = makeMutation('deleteMany', 'BatchPayload', 'true', deleteManyArgs, deleteManyResolver, false)
 
 const delteOneArgs = '{ where: t.field({ type: Inputs.#{modelName}WhereUniqueInput, required: true }) }'
 
 const deleteOneResolver = `async (query, _root, args, _context, _info) =>
-      await #{prisma}.#{modelNameLower}.delete({ where: args.where, ...query })`
+      await #{prisma}.#{modelNameLower}.delete({ where: #{where}, ...query })`
 
 const deleteOne = makeMutation('deleteOne', "'#{modelName}'", 'true', delteOneArgs, deleteOneResolver)
 
@@ -56,7 +56,7 @@ const updateManyArgs = `{
     }`
 
 const updateManyResolver = `async (_root, args, _context, _info) =>
-      await #{prisma}.#{modelNameLower}.updateMany({ where: args.where || undefined, data: args.data })`
+      await #{prisma}.#{modelNameLower}.updateMany({ where: #{where}, data: args.data })`
 
 const updateMany = makeMutation('updateMany', 'BatchPayload', 'false', updateManyArgs, updateManyResolver, false)
 
@@ -66,7 +66,7 @@ const updateOneArgs = `{
     }`
 
 const updateOneResolver = `async (query, _root, args, _context, _info) =>
-      await #{prisma}.#{modelNameLower}.update({ where: args.where, data: args.data, ...query })`
+      await #{prisma}.#{modelNameLower}.update({ where: #{where}, data: args.data, ...query })`
 
 const updateOne = makeMutation('updateOne', "'#{modelName}'", 'true', updateOneArgs, updateOneResolver)
 

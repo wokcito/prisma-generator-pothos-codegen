@@ -9,7 +9,8 @@ export const useTemplate = <T extends string, S extends Variables<T> | null = nu
 ): string => {
   let newTemplate: string = template
   Object.entries(variables).forEach(([name, value]) => {
-    if (!skip?.includes(name as S)) newTemplate = newTemplate.replace(new RegExp(`#{${name}}`, 'g'), value as string)
+    if (!skip?.includes(name as S))
+      newTemplate = newTemplate.replace(new RegExp(`#{${name}}`, 'g'), () => value as string)
   })
   return newTemplate
 }

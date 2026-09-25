@@ -28,7 +28,7 @@ const makeQuery = (
           query: isPrisma ? '\n        ...query,' : '',
           argsQuery: isPrisma ? 'query, ' : '',
         },
-        ['prisma', 'modelNameLower'],
+        ['prisma', 'modelNameLower', 'where', 'take'],
       ),
     isPrisma,
   )
@@ -42,11 +42,13 @@ const queryListArgsTemplate = `{
   distinct: t.field({ type: [Inputs.#{modelNameUpper}ScalarFieldEnum], required: false }),
 }`
 
+// `where` and `take` are filled at write time (see `getResolverVariables`). Their defaults
+// (`args.where || undefined` and `args.take || undefined`) reproduce the plain resolver.
 const queryListResolveTemplate = `async (#{argsQuery}_root, args, _context, _info) =>
       await #{prisma}.#{modelNameLower}.#{operation}({
-        where: args.where || undefined,
+        where: #{where},
         cursor: args.cursor || undefined,
-        take: args.take || undefined,#{distinct}
+        take: #{take},#{distinct}
         skip: args.skip || undefined,
         orderBy: args.orderBy || undefined,#{query}
       })`
@@ -54,7 +56,7 @@ const queryListResolveTemplate = `async (#{argsQuery}_root, args, _context, _inf
 const querySingleArgsTemplate = `{ where: t.field({ type: Inputs.#{modelName}WhereUniqueInput, required: true }) }`
 
 const querySingleResolveTemplate = `async (query, _root, args, _context, _info) =>
-      await #{prisma}.#{modelNameLower}.findUnique({ where: args.where, ...query })`
+      await #{prisma}.#{modelNameLower}.findUnique({ where: #{where}, ...query })`
 
 const findFirst = makeQuery('findFirst', "'#{modelName}'", 'true')
 
@@ -68,7 +70,7 @@ const findUnique = makeQuery(
   'true',
   true,
   useTemplate(querySingleArgsTemplate, {}, ['modelName']),
-  useTemplate(querySingleResolveTemplate, {}, ['prisma', 'modelNameLower']),
+  useTemplate(querySingleResolveTemplate, {}, ['prisma', 'modelNameLower', 'where']),
 )
 
 export const queries = { findFirst, findMany, count, findUnique }
