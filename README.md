@@ -73,10 +73,10 @@ The package has been developed and tested up to the following peer dependencies 
 <!-- TODO Maybe we could have some sort of automated pipeline that tests different versions of these peer deps? -->
 
 ```
-"@pothos/core": "^4.0.2",
-"@pothos/plugin-prisma": "^4.0.3"",
+"@pothos/core": "^4.15.1",
+"@pothos/plugin-prisma": "^4.17.0",
 "@prisma/client": "^7.10.0",
-"prisma": "^7.10.0",
+"prisma": "^7.10.0"
 ```
 
 Using higher versions may break something. In these cases, please open a new issue.
