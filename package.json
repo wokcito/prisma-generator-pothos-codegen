@@ -48,8 +48,8 @@
     "prisma-generator-pothos-codegen": "./src/bin.js"
   },
   "peerDependencies": {
-    "@pothos/core": "^4.0.2",
-    "@pothos/plugin-prisma": "^4.0.3",
+    "@pothos/core": "^4.15.1",
+    "@pothos/plugin-prisma": "^4.17.0",
     "@prisma/client": "^7.10.0",
     "prisma": "^7.10.0"
   },
@@ -57,13 +57,13 @@
     "node": ">=20.19.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.13",
+    "@biomejs/biome": "2.5.14",
     "@prisma/internals": "7.10.0",
-    "@types/node": "22.20.2",
+    "@types/node": "24.13.6",
     "shx": "0.4.0",
-    "tsx": "4.23.13",
+    "tsx": "4.23.15",
     "typescript": "7.0.2",
-    "vitest": "5.0.0"
+    "vitest": "5.0.2"
   },
   "dependencies": {
     "@prisma/generator-helper": "7.10.0"
