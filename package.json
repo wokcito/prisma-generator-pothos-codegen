@@ -38,6 +38,8 @@
     "prebuild": "bun run clean",
     "postbuild": "shx cp ./README.md ./dist && shx chmod +x ./dist/src/bin.js",
     "clean": "shx rm -rf dist",
+    "changeset": "changeset",
+    "version": "changeset version",
     "pub": "cd dist && npm publish",
     "format": "biome check --write ./src ./test",
     "lint": "biome check ./src ./test",
@@ -58,6 +60,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",
+    "@changesets/cli": "3.0.3",
     "@prisma/internals": "7.10.0",
     "@types/node": "24.13.6",
     "shx": "0.4.0",
