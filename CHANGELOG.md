@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1
+
+### Patch Changes
+
+- 70ec59e: Fix: 1.1.0 was published from the repository root instead of `dist`, so the package contained the TypeScript sources, tests, examples and internal documents, and no compiled JavaScript: `main`, `bin` and `./runtime` pointed to files that did not exist and the package could not be used. 1.1.0 was unpublished, and this version has the same code, built and published from `dist`.
+  
+  Publishing: `bun run pub` now runs the tests and the build before publishing from `dist`.
+
 ## 1.1.0
 
 ### Minor Changes
