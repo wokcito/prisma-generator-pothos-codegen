@@ -40,7 +40,7 @@
     "clean": "shx rm -rf dist",
     "changeset": "changeset",
     "version": "changeset version",
-    "pub": "cd dist && npm publish",
+    "pub": "npm run test && npm run build && cd dist && npm publish",
     "format": "biome check --write ./src ./test",
     "lint": "biome check ./src ./test",
     "check-src-and-examples": "bun run lint && bun run test && bun run tscheck && cd examples/inputs-simple-sqlite && bun run generate && bun run tscheck && cd ../secure-exposure && bun run generate && bun run tscheck && bun run test",
